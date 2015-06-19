@@ -1,6 +1,23 @@
 describe("Game", function () {
   var speed;
 
+  beforeEach(function () {
+    $("#canvas").remove();
+    $("body").prepend($("<canvas></canvas>")
+      .prop({
+        id: "canvas",
+        width: 200,
+        height: 100
+      })
+    );
+
+    GRID.init(5, 5, 5);
+  });
+
+  afterEach(function () {
+    $("#canvas").remove();
+  })
+
   it("should be able to return its current generation count", function () {
     expect(GAME.currentGeneration()).toEqual(0);
   });
@@ -24,4 +41,61 @@ describe("Game", function () {
     GAME.setSpeed(77);
     expect(GAME.currentSpeed()).toEqual(1);
   });
+
+  describe("when populated", function () {
+    beforeEach(function () {
+      /*
+      	Before Step
+    			X X - - -
+    			X X - - -
+    			X - - - -
+    			- - - - X
+    			- - - - X
+
+    		After Step
+    			X X - - -
+    			- - - - -
+    			X X - - -
+    			- - - - -
+    			- - - - -
+    	*/
+
+      GRID.setCellPopulation(0, 0, true);
+      GRID.setCellPopulation(0, 1, true);
+      GRID.setCellPopulation(0, 2, true);
+      GRID.setCellPopulation(1, 0, true);
+      GRID.setCellPopulation(1, 1, true);
+      GRID.setCellPopulation(3, 4, true);
+      GRID.setCellPopulation(4, 4, true);
+    });
+
+    it("should be able to return the amount of neighbours around a cell", function () {
+      // Boundary check
+      expect(GAME.livingNeighbours(0, 0)).toBe(3);
+      expect(GAME.livingNeighbours(0, 2)).toBe(2);
+      expect(GAME.livingNeighbours(4, 4)).toBe(1);
+
+      expect(GAME.livingNeighbours(1, 1)).toBe(4);
+    });
+
+    it("should let underpopulated cells die", function () {
+      GAME.step();
+      expect(GRID.getCellPopulation(3, 4)).toEqual(false);
+      expect(GRID.getCellPopulation(4, 4)).toEqual(false);
+    });
+
+    it("should let overpopulated cells die", function () {
+      GAME.step();
+      expect(GRID.getCellPopulation(1, 1)).toEqual(false);
+    });
+
+    it("should keep cells with 2 or 3 neighbours alive", function () {
+      GAME.step();
+      expect(GRID.getCellPopulation(1, 2)).toEqual(true);
+    });
+  });
+
+
+
+
 });

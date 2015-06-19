@@ -1,8 +1,7 @@
 describe("Grid", function () {
-  var gridWidth,
-    gridHeight,
-    gridSize,
-    gridPopulation;
+  var gridWidth = 10,
+    gridHeight = 5,
+    gridSize = 10;
 
   beforeEach(function () {
     $("#canvas").remove();
@@ -14,13 +13,7 @@ describe("Grid", function () {
       })
     );
 
-    gridWidth = 10;
-    gridHeight = 5;
-    gridSize = 10;
-
     GRID.init(gridWidth, gridHeight, gridSize);
-
-    gridPopulation = GRID.getPopulation();
   })
 
   afterEach(function () {
@@ -38,7 +31,7 @@ describe("Grid", function () {
 
     for (var i = 0; i < GRID.getWidth(); i++) {
       for (var j = 0; j < GRID.getHeight(); j++) {
-        if (gridPopulation[i][j]) {
+        if (GRID.getCellPopulation(i, j)) {
           isEmpty = false;
         }
       }
@@ -53,23 +46,23 @@ describe("Grid", function () {
       pos_2_x = 7,
       pos_2_y = 3;
 
-    expect(gridPopulation[pos_1_x][pos_1_y]).toBe(false);
-    expect(gridPopulation[pos_2_x][pos_2_y]).toBe(false);
+    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(false);
+    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(false);
 
-    GRID.setPopulation(pos_1_x, pos_1_y, true);
+    GRID.setCellPopulation(pos_1_x, pos_1_y, true);
 
-    expect(gridPopulation[pos_1_x][pos_1_y]).toBe(true);
-    expect(gridPopulation[pos_2_x][pos_2_y]).toBe(false);
+    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(true);
+    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(false);
 
-    GRID.setPopulation(pos_2_x, pos_2_y, true);
+    GRID.setCellPopulation(pos_2_x, pos_2_y, true);
 
-    expect(gridPopulation[pos_1_x][pos_1_y]).toBe(true);
-    expect(gridPopulation[pos_2_x][pos_2_y]).toBe(true);
+    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(true);
+    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(true);
 
-    GRID.setPopulation(pos_1_x, pos_1_y, false);
+    GRID.setCellPopulation(pos_1_x, pos_1_y, false);
 
-    expect(gridPopulation[pos_1_x][pos_1_y]).toBe(false);
-    expect(gridPopulation[pos_2_x][pos_2_y]).toBe(true);
+    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(false);
+    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(true);
   });
 
 });
