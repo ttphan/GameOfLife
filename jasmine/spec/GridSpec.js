@@ -5,9 +5,18 @@ describe("Grid", function () {
     gridPopulation;
 
   beforeEach(function () {
+    $("#canvas").remove();
+    $("body").prepend($("<canvas></canvas>")
+      .prop({
+        id: "canvas",
+        width: 200,
+        height: 100
+      })
+    );
+
     gridWidth = 10;
     gridHeight = 5;
-    gridSize = 50;
+    gridSize = 10;
 
     GRID.init(gridWidth, gridHeight, gridSize);
 
@@ -15,7 +24,7 @@ describe("Grid", function () {
   })
 
   afterEach(function () {
-    GRID.init(gridWidth, gridHeight, gridSize);
+    $("#canvas").remove();
   })
 
   it("should be initialized correctly", function () {

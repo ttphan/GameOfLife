@@ -5,9 +5,6 @@ $(function () {
     gridHeight = 20,
     gridSize = 10;
 
-  // canvas.width = window.innerWidth;
-  // canvas.height = window.innerHeight;
-
   GRID.init(gridWidth, gridHeight, gridSize);
 });
 
@@ -89,4 +86,31 @@ var GRID = (function () {
     }
   }
 
+})();
+
+var GAME = (function () {
+  var generation = 0,
+    speed = 1;
+
+  return {
+    currentGeneration: function () {
+      return generation;
+    },
+
+    currentSpeed: function () {
+      return speed;
+    },
+
+    setSpeed: function (newSpeed) {
+      if (newSpeed > 0 && newSpeed < 4) {
+        speed = newSpeed;
+      } else {
+        speed = 1;
+      }
+    },
+
+    step: function () {
+      generation++;
+    }
+  }
 })();
