@@ -15,6 +15,14 @@ function randomPop() {
   GRID.setCellPopulation(randomX, randomY, true);
 }
 
+function glider() {
+  GRID.setCellPopulation(2, 1, true);
+  GRID.setCellPopulation(3, 2, true);
+  GRID.setCellPopulation(1, 3, true);
+  GRID.setCellPopulation(2, 3, true);
+  GRID.setCellPopulation(3, 3, true);
+}
+
 function draw() {
   var canvas = $("#canvas")[0],
     context = canvas.getContext('2d'),
