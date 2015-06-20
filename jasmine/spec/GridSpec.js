@@ -31,7 +31,7 @@ describe("Grid", function () {
 
     for (var i = 0; i < GRID.getWidth(); i++) {
       for (var j = 0; j < GRID.getHeight(); j++) {
-        if (GRID.getCellPopulation(i, j)) {
+        if (GRID.cellPopulation(i, j)) {
           isEmpty = false;
         }
       }
@@ -46,23 +46,23 @@ describe("Grid", function () {
       pos_2_x = 7,
       pos_2_y = 3;
 
-    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(false);
-    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(false);
+    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(false);
+    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(false);
 
-    GRID.setCellPopulation(pos_1_x, pos_1_y, true);
+    GRID.cellPopulation(pos_1_x, pos_1_y, true);
 
-    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(true);
-    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(false);
+    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(true);
+    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(false);
 
-    GRID.setCellPopulation(pos_2_x, pos_2_y, true);
+    GRID.cellPopulation(pos_2_x, pos_2_y, true);
 
-    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(true);
-    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(true);
+    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(true);
+    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(true);
 
-    GRID.setCellPopulation(pos_1_x, pos_1_y, false);
+    GRID.cellPopulation(pos_1_x, pos_1_y, false);
 
-    expect(GRID.getCellPopulation(pos_1_x, pos_1_y)).toBe(false);
-    expect(GRID.getCellPopulation(pos_2_x, pos_2_y)).toBe(true);
+    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(false);
+    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(true);
   });
 
 });
