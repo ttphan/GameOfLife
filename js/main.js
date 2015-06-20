@@ -11,7 +11,7 @@ $(function () {
 function init() {
   var gridWidth = 100,
     gridHeight = 50,
-    gridSize = 5;
+    gridSize = 10;
 
   GRID.init(gridWidth, gridHeight, gridSize);
   GAME.init();
