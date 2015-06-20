@@ -14,6 +14,8 @@ describe("Grid", function () {
     );
 
     GRID.init(gridWidth, gridHeight, gridSize);
+    GAME.init();
+    GRID.draw();
   })
 
   afterEach(function () {
@@ -31,7 +33,7 @@ describe("Grid", function () {
 
     for (var i = 0; i < GRID.getWidth(); i++) {
       for (var j = 0; j < GRID.getHeight(); j++) {
-        if (GRID.cellPopulation(i, j)) {
+        if (GAME.isAlive(i, j)) {
           isEmpty = false;
         }
       }
@@ -46,23 +48,23 @@ describe("Grid", function () {
       pos_2_x = 7,
       pos_2_y = 3;
 
-    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(false);
-    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(false);
+    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(false);
+    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(false);
 
-    GRID.cellPopulation(pos_1_x, pos_1_y, true);
+    GAME.isAlive(pos_1_x, pos_1_y, true);
 
-    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(true);
-    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(false);
+    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(true);
+    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(false);
 
-    GRID.cellPopulation(pos_2_x, pos_2_y, true);
+    GAME.isAlive(pos_2_x, pos_2_y, true);
 
-    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(true);
-    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(true);
+    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(true);
+    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(true);
 
-    GRID.cellPopulation(pos_1_x, pos_1_y, false);
+    GAME.isAlive(pos_1_x, pos_1_y, false);
 
-    expect(GRID.cellPopulation(pos_1_x, pos_1_y)).toBe(false);
-    expect(GRID.cellPopulation(pos_2_x, pos_2_y)).toBe(true);
+    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(false);
+    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(true);
   });
 
 });

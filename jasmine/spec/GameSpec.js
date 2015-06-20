@@ -12,6 +12,8 @@ describe("Game", function () {
     );
 
     GRID.init(5, 5, 5);
+    GAME.init();
+    GRID.draw();
   });
 
   afterEach(function () {
@@ -60,13 +62,13 @@ describe("Game", function () {
     			- - - - -
     	*/
 
-      GRID.cellPopulation(0, 0, true);
-      GRID.cellPopulation(0, 1, true);
-      GRID.cellPopulation(0, 2, true);
-      GRID.cellPopulation(1, 0, true);
-      GRID.cellPopulation(1, 1, true);
-      GRID.cellPopulation(3, 4, true);
-      GRID.cellPopulation(4, 4, true);
+      GAME.isAlive(0, 0, true);
+      GAME.isAlive(0, 1, true);
+      GAME.isAlive(0, 2, true);
+      GAME.isAlive(1, 0, true);
+      GAME.isAlive(1, 1, true);
+      GAME.isAlive(3, 4, true);
+      GAME.isAlive(4, 4, true);
     });
 
     it("should be able to return the amount of neighbours around a cell", function () {
@@ -80,18 +82,18 @@ describe("Game", function () {
 
     it("should let underpopulated cells die", function () {
       GAME.step();
-      expect(GRID.cellPopulation(3, 4)).toEqual(false);
-      expect(GRID.cellPopulation(4, 4)).toEqual(false);
+      expect(GAME.isAlive(3, 4)).toEqual(false);
+      expect(GAME.isAlive(4, 4)).toEqual(false);
     });
 
     it("should let overpopulated cells die", function () {
       GAME.step();
-      expect(GRID.cellPopulation(1, 1)).toEqual(false);
+      expect(GAME.isAlive(1, 1)).toEqual(false);
     });
 
     it("should keep cells with 2 or 3 neighbours alive", function () {
       GAME.step();
-      expect(GRID.cellPopulation(1, 2)).toEqual(true);
+      expect(GAME.isAlive(1, 2)).toEqual(true);
     });
   });
 

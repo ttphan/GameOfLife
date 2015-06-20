@@ -1,121 +1,53 @@
 $(function () {
-  var canvas = $("#canvas")[0],
-    context = canvas.getContext('2d'),
-    gridWidth = 200,
-    gridHeight = 100,
-    gridSize = 5;
+  init();
+});
+
+function init() {
+  gridWidth = 200,
+  gridHeight = 100,
+  gridSize = 5;
 
   GRID.init(gridWidth, gridHeight, gridSize);
-});
+  GAME.init();
+  GRID.draw();
+}
 
 function randomPop() {
   var randomX = Math.floor(Math.random() * GRID.getWidth());
   var randomY = Math.floor(Math.random() * GRID.getHeight());
 
-  GRID.cellPopulation(randomX, randomY, true);
+  GAME.isAlive(randomX, randomY, true);
 }
 
 function glider() {
-  // GRID.cellPopulation(12, 8, true);
-  // GRID.cellPopulation(13, 9, true);
-  // GRID.cellPopulation(11, 10, true);
-  // GRID.cellPopulation(12, 10, true);
-  // GRID.cellPopulation(13, 10, true);
-
-  GRID.cellPopulation(12, 8, true);
-  GRID.cellPopulation(11, 7, true);
-  GRID.cellPopulation(11, 6, true);
-  GRID.cellPopulation(12, 6, true);
-  GRID.cellPopulation(13, 6, true);
+  GAME.isAlive(12, 8, true);
+  GAME.isAlive(11, 7, true);
+  GAME.isAlive(11, 6, true);
+  GAME.isAlive(12, 6, true);
+  GAME.isAlive(13, 6, true);
 }
 
 function acorn() {
-  GRID.cellPopulation(18, 8, true);
-  GRID.cellPopulation(20, 9, true);
-  GRID.cellPopulation(17, 10, true);
-  GRID.cellPopulation(18, 10, true);
-  GRID.cellPopulation(21, 10, true);
-  GRID.cellPopulation(22, 10, true);
-  GRID.cellPopulation(23, 10, true);
-}
-
-function draw() {
-  var canvas = $("#canvas")[0],
-    context = canvas.getContext('2d'),
-    gridPopulation = GRID.gridPopulation(),
-    width = GRID.getWidth(),
-    height = GRID.getHeight(),
-    size = GRID.getSize();
-
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillStyle = "red";
-
-  for (var x = 0; x < width; x++) {
-    for (var y = 0; y < height; y++) {
-      context.beginPath();
-
-      context.rect(x * size, y * size, size, size);
-      context.stroke();
-
-      if (gridPopulation[x][y]) {
-        context.fill();
-      }
-
-      context.closePath();
-    }
-  }
+  GAME.isAlive(18, 8, true);
+  GAME.isAlive(20, 9, true);
+  GAME.isAlive(17, 10, true);
+  GAME.isAlive(18, 10, true);
+  GAME.isAlive(21, 10, true);
+  GAME.isAlive(22, 10, true);
+  GAME.isAlive(23, 10, true);
 }
 
 var GRID = (function () {
   var width,
     height,
     size,
-    gridPopulation = [],
-    wrapAround = true;
+    wrapAround = false;
 
   return {
     init: function (gridWidth, gridHeight, gridSize) {
       width = gridWidth;
       height = gridHeight;
       size = gridSize
-      gridPopulation = [];
-
-      for (var x = 0; x < width; x++) {
-        gridPopulation[x] = [];
-        for (var y = 0; y < height; y++) {
-          gridPopulation[x][y] = false;
-        }
-      }
-
-      draw();
-    },
-
-    gridPopulation: function (grid) {
-      // Get
-      if (arguments.length < 1) {
-        return gridPopulation;
-      }
-      // Set
-      else {
-        // Deep copy
-        gridPopulation = grid;
-        width = gridPopulation.length;
-        height = gridPopulation[0].length;
-
-        draw();
-      }
-    },
-
-    cellPopulation: function (x, y, status) {
-      // Get
-      if (arguments.length < 3) {
-        return gridPopulation[x][y];
-      }
-      // Set
-      else {
-        gridPopulation[x][y] = status;
-        draw();
-      }
     },
 
     getWidth: function () {
@@ -139,6 +71,28 @@ var GRID = (function () {
       else {
         wrapAround = bool;
       }
+    },
+
+    draw: function () {
+      var canvas = $("#canvas")[0],
+        context = canvas.getContext('2d');
+
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = "red";
+
+      for (var x = 0; x < width; x++) {
+        for (var y = 0; y < height; y++) {
+          context.beginPath();
+
+          context.rect(x * size, y * size, size, size);
+          context.stroke();
+          if (GAME.isAlive(x, y)) {
+            context.fill();
+          }
+
+          context.closePath();
+        }
+      }
     }
   }
 
@@ -148,9 +102,47 @@ var GAME = (function () {
   var generation = 0,
     speed = 1,
     isRunning = false,
-    intervalId = undefined;
+    intervalId = undefined,
+    population;
 
   return {
+    init: function () {
+      var gridWidth = GRID.getWidth();
+      var gridHeight = GRID.getHeight();
+
+      population = new Array(gridWidth * gridHeight);
+
+      for (var i = 0; i < gridWidth * gridHeight; i++) {
+        population[i] = false;
+      }
+    },
+
+    population: function (grid) {
+      // Get
+      if (arguments.length < 1) {
+        return population;
+      }
+      // Set
+      else {
+        // Deep copy
+        population = grid;
+
+        GRID.draw();
+      }
+    },
+
+    isAlive: function (x, y, status) {
+      // Get
+      if (arguments.length < 3) {
+        return population[y * GRID.getWidth() + x];
+      }
+      // Set
+      else {
+        population[y * GRID.getWidth() + x] = status;
+        GRID.draw();
+      }
+    },
+
     currentGeneration: function () {
       return generation;
     },
@@ -168,38 +160,36 @@ var GAME = (function () {
     },
 
     step: function () {
-      var population = GRID.gridPopulation(),
-        width = GRID.getWidth(),
+      var width = GRID.getWidth(),
         height = GRID.getHeight(),
         newGrid = [];
 
       for (var x = 0; x < width; x++) {
-        newGrid[x] = [];
         for (var y = 0; y < height; y++) {
-          newGrid[x][y] = true;
+          newGrid[y * width + x] = true;
           amountOfNeighbours = GAME.livingNeighbours(x, y);
 
           // If alive
-          if (population[x][y]) {
+          if (GAME.isAlive(x, y)) {
             // Under- or overpopulation -> dead
             if (amountOfNeighbours < 2 || amountOfNeighbours > 3) {
-              newGrid[x][y] = false;
+              newGrid[y * width + x] = false;
             }
           }
           // If not alive, if it has exactly 3 living neighbours -> alive
           else if (amountOfNeighbours != 3) {
-            newGrid[x][y] = false;
+            newGrid[y * width + x] = false;
           }
         }
       }
 
-      GRID.gridPopulation(newGrid);
+      GAME.population(newGrid);
       generation++;
     },
 
     livingNeighbours: function (x, y) {
       var amountOfNeighbours = 0,
-        population = GRID.gridPopulation(),
+        population = GAME.population(),
         width = GRID.getWidth(),
         height = GRID.getHeight();
 
@@ -218,7 +208,7 @@ var GAME = (function () {
               }
 
               // check if it is alive
-              if (population[a][b]) {
+              if (GAME.isAlive(x, y)) {
                 amountOfNeighbours++;
               }
             }
