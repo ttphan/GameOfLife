@@ -1,10 +1,9 @@
 #main_gui {
-	margin: 30px;
+	margin-top: 30px;
 }
 
 body, html { 
   width: 100%;
-  height: 100%;
   border: 0px;
   padding: 0px;
   margin: 0px;

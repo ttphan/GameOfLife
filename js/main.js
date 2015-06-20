@@ -61,6 +61,11 @@ function changeGridSize() {
   GRID.draw();
 }
 
+function selectSpeed() {
+  var speed = parseInt($('#speedSelection').val());
+  GAME.setSpeed(speed);
+}
+
 var GRID = (function () {
   var width,
     height,
@@ -197,10 +202,15 @@ var GAME = (function () {
     },
 
     setSpeed: function (newSpeed) {
-      if (newSpeed > 0 && newSpeed < 4) {
+      if (newSpeed >= 0 && newSpeed <= 3) {
         speed = newSpeed;
       } else {
         speed = 1;
+      }
+
+      if (isRunning) {
+        clearInterval(intervalId);
+        intervalId = setInterval(GAME.step, 64 / Math.pow(2, GAME.currentSpeed()));
       }
     },
 
@@ -280,7 +290,7 @@ var GAME = (function () {
         button.text("Stop")
           .removeClass("btn-success")
           .addClass("btn-danger");
-        intervalId = setInterval(GAME.step, 10);
+        intervalId = setInterval(GAME.step, 64 / Math.pow(2, GAME.currentSpeed()));
       }
 
       isRunning = !isRunning;

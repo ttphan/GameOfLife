@@ -1,6 +1,4 @@
 describe("Game", function () {
-  var speed;
-
   beforeEach(function () {
     $("#canvas").remove();
     $("body").prepend($("<canvas></canvas>")
