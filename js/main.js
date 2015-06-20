@@ -1,11 +1,17 @@
+var canvas,
+  context;
+
 $(function () {
+  canvas = $("#canvas")[0];
+  context = canvas.getContext('2d');
+
   init();
 });
 
 function init() {
-  gridWidth = 200,
-  gridHeight = 100,
-  gridSize = 5;
+  var gridWidth = 100,
+    gridHeight = 50,
+    gridSize = 5;
 
   GRID.init(gridWidth, gridHeight, gridSize);
   GAME.init();
@@ -17,31 +23,33 @@ function randomPop() {
   var randomY = Math.floor(Math.random() * GRID.getHeight());
 
   GAME.isAlive(randomX, randomY, true);
+  GRID.draw();
 }
 
 function glider() {
-  GAME.isAlive(12, 8, true);
-  GAME.isAlive(11, 7, true);
-  GAME.isAlive(11, 6, true);
-  GAME.isAlive(12, 6, true);
-  GAME.isAlive(13, 6, true);
+  GAME.isAlive(3, 1, true);
+  GAME.isAlive(4, 2, true);
+  GAME.isAlive(2, 3, true);
+  GAME.isAlive(3, 3, true);
+  GAME.isAlive(4, 3, true);
+  GRID.draw();
 }
 
 function acorn() {
-  GAME.isAlive(18, 8, true);
-  GAME.isAlive(20, 9, true);
-  GAME.isAlive(17, 10, true);
-  GAME.isAlive(18, 10, true);
-  GAME.isAlive(21, 10, true);
-  GAME.isAlive(22, 10, true);
-  GAME.isAlive(23, 10, true);
+  GAME.isAlive(38, 23, true);
+  GAME.isAlive(40, 24, true);
+  GAME.isAlive(37, 25, true);
+  GAME.isAlive(38, 25, true);
+  GAME.isAlive(41, 25, true);
+  GAME.isAlive(42, 25, true);
+  GAME.isAlive(43, 25, true);
+  GRID.draw();
 }
 
 var GRID = (function () {
   var width,
     height,
-    size,
-    wrapAround = false;
+    size;
 
   return {
     init: function (gridWidth, gridHeight, gridSize) {
@@ -62,22 +70,8 @@ var GRID = (function () {
       return size;
     },
 
-    wrapAround: function (bool) {
-      // Get
-      if (arguments.length < 1) {
-        return wrapAround;
-      }
-      // Set
-      else {
-        wrapAround = bool;
-      }
-    },
-
     draw: function () {
-      var canvas = $("#canvas")[0],
-        context = canvas.getContext('2d');
-
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      GRID.clearGrid();
       context.fillStyle = "red";
 
       for (var x = 0; x < width; x++) {
@@ -93,6 +87,10 @@ var GRID = (function () {
           context.closePath();
         }
       }
+    },
+
+    clearGrid: function () {
+      context.clearRect(0, 0, canvas.width, canvas.height);
     }
   }
 
@@ -103,14 +101,16 @@ var GAME = (function () {
     speed = 1,
     isRunning = false,
     intervalId = undefined,
-    population;
+    population,
+    activeCells;
 
   return {
     init: function () {
       var gridWidth = GRID.getWidth();
       var gridHeight = GRID.getHeight();
 
-      population = new Array(gridWidth * gridHeight);
+      population = [];
+      activeCells = [];
 
       for (var i = 0; i < gridWidth * gridHeight; i++) {
         population[i] = false;
@@ -132,14 +132,50 @@ var GAME = (function () {
     },
 
     isAlive: function (x, y, status) {
+      var width = GRID.getWidth(),
+        height = GRID.getHeight();
+
       // Get
       if (arguments.length < 3) {
-        return population[y * GRID.getWidth() + x];
+        return population[y * width + x];
       }
       // Set
       else {
-        population[y * GRID.getWidth() + x] = status;
-        GRID.draw();
+        population[y * width + x] = status;
+
+        // Add changed cell with its neighbours to active cell list
+        for (var i = x - 1; i <= (x + 1); i++) {
+          for (var j = y - 1; j <= (y + 1); j++) {
+            // Wrap around
+            var a = (i + width) % width;
+            var b = (j + height) % height;
+
+            // Convert 2D coordinates to 1D
+            var index = b * width + a;
+
+            // Only add if not already in active cell
+            if (activeCells.indexOf(index) < 0) {
+              activeCells.push(index);
+            }
+          }
+        }
+
+        //GRID.draw();
+      }
+    },
+
+    getActiveCells: function () {
+      return activeCells;
+    },
+
+    resetActiveCells: function () {
+      activeCells = [];
+    },
+
+    resetGame: function () {
+      GAME.resetActiveCells();
+      for (var i = 0; i < GRID.getWidth() * GRID.getHeight(); i++) {
+        population[i] = false;
       }
     },
 
@@ -162,55 +198,60 @@ var GAME = (function () {
     step: function () {
       var width = GRID.getWidth(),
         height = GRID.getHeight(),
-        newGrid = [];
+        changedCells = [],
+        activeCells = GAME.getActiveCells();
 
-      for (var x = 0; x < width; x++) {
-        for (var y = 0; y < height; y++) {
-          newGrid[y * width + x] = true;
-          amountOfNeighbours = GAME.livingNeighbours(x, y);
 
-          // If alive
-          if (GAME.isAlive(x, y)) {
-            // Under- or overpopulation -> dead
-            if (amountOfNeighbours < 2 || amountOfNeighbours > 3) {
-              newGrid[y * width + x] = false;
-            }
+      // Track which cells are alive for next generation
+      for (var i = 0; i < activeCells.length; i++) {
+        var index = activeCells[i];
+        var x = index % width;
+        var y = Math.floor(index / width);
+
+        var amountOfNeighbours = GAME.livingNeighbours(x, y);
+
+        // If alive
+        if (GAME.isAlive(x, y)) {
+          // Not under- or overpopulation -> keep alive
+          if (amountOfNeighbours == 2 || amountOfNeighbours == 3) {
+            changedCells.push(index);
           }
-          // If not alive, if it has exactly 3 living neighbours -> alive
-          else if (amountOfNeighbours != 3) {
-            newGrid[y * width + x] = false;
-          }
+        }
+        // If not alive, if it has exactly 3 living neighbours -> alive
+        else if (amountOfNeighbours == 3) {
+          changedCells.push(index);
         }
       }
 
-      GAME.population(newGrid);
+      // Clear grid and redraw the living cells.
+      GAME.resetGame();
+      GRID.clearGrid();
+
+      for (var i = 0; i < changedCells.length; i++) {
+        var index = changedCells[i];
+        var x = index % width;
+        var y = Math.floor(index / width);
+
+        GAME.isAlive(x, y, true);
+      }
+
+      GRID.draw();
+
       generation++;
     },
 
     livingNeighbours: function (x, y) {
       var amountOfNeighbours = 0,
-        population = GAME.population(),
         width = GRID.getWidth(),
         height = GRID.getHeight();
 
       for (var i = x - 1; i <= x + 1; i++) {
         for (var j = y - 1; j <= y + 1; j++) {
-          // Check if it is a legal spot (unless wrap around, then skip test)
-          if (GRID.wrapAround() || (i >= 0 && j >= 0 && i < width && j <= GRID.getHeight())) {
-            // Check if it is itself
-            if (!(i == x && j == y)) {
-              // Take into account wrap around cells if applicable
-              var a = i,
-                b = j;
-              if (GRID.wrapAround()) {
-                a = (i + width) % width;
-                b = (j + height) % height;
-              }
-
-              // check if it is alive
-              if (GAME.isAlive(x, y)) {
-                amountOfNeighbours++;
-              }
+          // Check if it is itself
+          if (!(i == x && j == y)) {
+            // check if it is alive
+            if (GAME.isAlive((i + width) % width, (j + height) % height)) {
+              amountOfNeighbours++;
             }
           }
         }
@@ -223,7 +264,7 @@ var GAME = (function () {
       if (isRunning) {
         clearInterval(intervalId);
       } else {
-        intervalId = setInterval(GAME.step, 100);
+        intervalId = setInterval(GAME.step, 10);
       }
 
       isRunning = !isRunning;

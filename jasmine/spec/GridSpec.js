@@ -1,5 +1,5 @@
 describe("Grid", function () {
-  var gridWidth = 10,
+  var gridWidth = 5,
     gridHeight = 5,
     gridSize = 10;
 
@@ -15,7 +15,6 @@ describe("Grid", function () {
 
     GRID.init(gridWidth, gridHeight, gridSize);
     GAME.init();
-    GRID.draw();
   })
 
   afterEach(function () {
@@ -43,28 +42,23 @@ describe("Grid", function () {
   });
 
   it("should be able to change the population", function () {
-    var pos_1_x = 1,
-      pos_1_y = 2,
-      pos_2_x = 7,
-      pos_2_y = 3;
+    expect(GAME.isAlive(1, 2)).toBe(false);
+    expect(GAME.isAlive(4, 3)).toBe(false);
 
-    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(false);
-    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(false);
+    GAME.isAlive(1, 2, true);
 
-    GAME.isAlive(pos_1_x, pos_1_y, true);
+    expect(GAME.isAlive(1, 2)).toBe(true);
+    expect(GAME.isAlive(4, 3)).toBe(false);
 
-    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(true);
-    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(false);
+    GAME.isAlive(4, 3, true);
 
-    GAME.isAlive(pos_2_x, pos_2_y, true);
+    expect(GAME.isAlive(1, 2)).toBe(true);
+    expect(GAME.isAlive(4, 3)).toBe(true);
 
-    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(true);
-    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(true);
+    GAME.isAlive(1, 2, false);
 
-    GAME.isAlive(pos_1_x, pos_1_y, false);
-
-    expect(GAME.isAlive(pos_1_x, pos_1_y)).toBe(false);
-    expect(GAME.isAlive(pos_2_x, pos_2_y)).toBe(true);
+    expect(GAME.isAlive(1, 2)).toBe(false);
+    expect(GAME.isAlive(4, 3)).toBe(true);
   });
 
 });
