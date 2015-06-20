@@ -2,18 +2,18 @@ var canvas,
   context;
 
 $(function () {
-  canvas = $("#canvas")[0];
-  context = canvas.getContext('2d');
-
-  init();
-});
-
-function init() {
   var gridWidth = 100,
     gridHeight = 50,
     gridSize = 10;
 
-  GRID.init(gridWidth, gridHeight, gridSize);
+  canvas = $("#canvas")[0];
+  context = canvas.getContext('2d');
+
+  init(gridWidth, gridHeight, gridSize);
+});
+
+function init(width, height, size) {
+  GRID.init(width, height, size);
   GAME.init();
   GRID.draw();
 }
@@ -27,22 +27,37 @@ function randomPop() {
 }
 
 function glider() {
-  GAME.isAlive(3, 1, true);
-  GAME.isAlive(4, 2, true);
-  GAME.isAlive(2, 3, true);
-  GAME.isAlive(3, 3, true);
-  GAME.isAlive(4, 3, true);
+  var center_x = Math.floor(GRID.getWidth() / 2);
+  var center_y = Math.floor(GRID.getHeight() / 2);
+
+  GAME.isAlive(center_x, center_y - 1, true);
+  GAME.isAlive(center_x + 1, center_y, true);
+  GAME.isAlive(center_x - 1, center_y + 1, true);
+  GAME.isAlive(center_x, center_y + 1, true);
+  GAME.isAlive(center_x + 1, center_y + 1, true);
   GRID.draw();
 }
 
 function acorn() {
-  GAME.isAlive(38, 23, true);
-  GAME.isAlive(40, 24, true);
-  GAME.isAlive(37, 25, true);
-  GAME.isAlive(38, 25, true);
-  GAME.isAlive(41, 25, true);
-  GAME.isAlive(42, 25, true);
-  GAME.isAlive(43, 25, true);
+  var center_x = Math.floor(GRID.getWidth() / 2);
+  var center_y = Math.floor(GRID.getHeight() / 2);
+
+  GAME.isAlive(center_x - 1, center_y - 1, true);
+  GAME.isAlive(center_x + 1, center_y, true);
+  GAME.isAlive(center_x - 2, center_y + 1, true);
+  GAME.isAlive(center_x - 1, center_y + 1, true);
+  GAME.isAlive(center_x + 2, center_y + 1, true);
+  GAME.isAlive(center_x + 3, center_y + 1, true);
+  GAME.isAlive(center_x + 4, center_y + 1, true);
+  GRID.draw();
+}
+
+function changeGridSize() {
+  var size = $('#sizeSelection').val().split("x");
+
+  GAME.stop();
+  GRID.init(parseInt(size[0]), parseInt(size[1]), parseInt(size[2]));
+  GAME.init();
   GRID.draw();
 }
 
@@ -71,7 +86,7 @@ var GRID = (function () {
     },
 
     draw: function () {
-      GRID.clearGrid();
+      context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = "red";
 
       for (var x = 0; x < width; x++) {
@@ -87,10 +102,6 @@ var GRID = (function () {
           context.closePath();
         }
       }
-    },
-
-    clearGrid: function () {
-      context.clearRect(0, 0, canvas.width, canvas.height);
     }
   }
 
@@ -159,8 +170,6 @@ var GAME = (function () {
             }
           }
         }
-
-        //GRID.draw();
       }
     },
 
@@ -225,7 +234,6 @@ var GAME = (function () {
 
       // Clear grid and redraw the living cells.
       GAME.resetGame();
-      GRID.clearGrid();
 
       for (var i = 0; i < changedCells.length; i++) {
         var index = changedCells[i];
@@ -261,22 +269,30 @@ var GAME = (function () {
     },
 
     toggleRun: function () {
+      var button = $("#runButton");
+
       if (isRunning) {
+        button.text("Start")
+          .removeClass("btn-danger")
+          .addClass("btn-success");
         clearInterval(intervalId);
       } else {
+        button.text("Stop")
+          .removeClass("btn-success")
+          .addClass("btn-danger");
         intervalId = setInterval(GAME.step, 10);
       }
 
       isRunning = !isRunning;
     },
 
-    clickStep: function () {
-      if (isRunning) {
-        clearInterval(intervalId);
-        isRunning = false;
-      }
+    stop: function () {
+      $("#runButton").text("Start")
+        .removeClass("btn-danger")
+        .addClass("btn-success");
 
-      GAME.step();
+      clearInterval(intervalId);
+      isRunning = false;
     }
   }
 })();

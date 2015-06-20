@@ -13,17 +13,24 @@
 	</head>
 
 	<body>
-		<div id="main_gui" class="row">
+		<div id="main_gui" class="container-fluid">
 			<div class="col-md-offset-1 col-md-10">
-				<canvas id="canvas" width="1000px" height="600px"></canvas>
+				<canvas id="canvas" width="1000px" height="500px"></canvas>
 			</div>
-		</div>
-			<div class="col-md-4">
+			<div class="col-md-offset-5 col-md-4">
 				<button class="btn btn-sm btn-primary" onclick="glider()">Glider</button>
 				<button class="btn btn-sm btn-primary" onclick="acorn()">Acorn</button>
-				<button class="btn btn-sm btn-primary" onclick="GAME.clickStep()">Step</button>
-				<button class="btn btn-sm btn-success" onclick="GAME.toggleRun()">Start</button>
+				<button class="btn btn-sm btn-primary" onclick="GAME.stop(); GAME.step()">Step</button>
+				<button id="runButton" class="btn btn-sm btn-success" onclick="GAME.toggleRun()">Start</button>
+				Size: 
+				<select id="sizeSelection" onchange="changeGridSize()">
+				  <option value="25x12x40">25 x 12</option>
+				  <option value="50x25x20">50 x 25</option>
+				  <option value="100x50x10" selected="selected">100 x 50</option>
+				  <option value="200x100x5">200 x 100</option>
+				</select>
 			</div>
+		</div>
 	</body>
 
 </html>
