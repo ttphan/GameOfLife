@@ -5,14 +5,24 @@ var ALIVE = 4,
 $(function () {
   var DEFAULT_GRID_WIDTH = 100,
     DEFAULT_GRID_HEIGHT = 50,
-    DEFAULT_CELL_SIZE = 10,
-    gridCanvas = $("#gridOverlay");
+    DEFAULT_CELL_SIZE = 10;
 
   init(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, DEFAULT_CELL_SIZE);
 
-  gridCanvas[0].addEventListener('click', function (event) {
-    var x = Math.floor((event.pageX - gridCanvas.offset().left) / GRID.getCellSize()),
-      y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getCellSize());
+  addMouseListeners();
+});
+
+function addMouseListeners() {
+  var mouseDown = false,
+    gridCanvas = $("#gridOverlay"),
+    x,
+    y;
+
+  gridCanvas.mousedown(function (event) {
+    x = Math.floor((event.pageX - gridCanvas.offset().left) / GRID.getCellSize());
+    y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getCellSize());
+
+    mouseDown = true;
 
     if (GAME.cellStatus(x, y) !== ALIVE) {
       GAME.cellStatus(x, y, ALIVE);
@@ -22,7 +32,31 @@ $(function () {
 
     GRID.draw();
   });
-});
+
+  $(document).mouseup(function () {
+    mouseDown = false;
+  });
+
+  gridCanvas.mousemove(function (event) {
+    if (mouseDown) {
+      var new_x = Math.floor((event.pageX - gridCanvas.offset().left) / GRID.getCellSize()),
+        new_y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getCellSize());
+
+      if (new_x !== x || new_y !== y) {
+        x = new_x;
+        y = new_y;
+
+        if (GAME.cellStatus(x, y) !== ALIVE) {
+          GAME.cellStatus(x, y, ALIVE);
+        } else {
+          GAME.cellStatus(x, y, DEAD);
+        }
+
+        GRID.draw();
+      }
+    }
+  });
+}
 
 function init(width, height, size) {
   GRID.init(width, height, size);
