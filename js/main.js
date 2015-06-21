@@ -103,11 +103,11 @@ var GRID = (function () {
             if (status == 4) {
               context.fillStyle = "red";
             } else if (status == 3) {
-              context.fillStyle = "#4c4c4c";
+              context.fillStyle = "orange";
             } else if (status == 2) {
-              context.fillStyle = "#999999";
+              context.fillStyle = "yellow";
             } else {
-              context.fillStyle = "#cccccc";
+              context.fillStyle = "#666666";
             }
 
             context.fill();
@@ -205,7 +205,7 @@ var GAME = (function () {
 
       if (isRunning) {
         clearInterval(intervalId);
-        intervalId = setInterval(GAME.step, 128 / Math.pow(2, GAME.currentSpeed()));
+        intervalId = setInterval(GAME.step, 32 / Math.pow(2, GAME.currentSpeed()));
       }
     },
 
@@ -290,7 +290,7 @@ var GAME = (function () {
         button.text("Stop")
           .removeClass("btn-success")
           .addClass("btn-danger");
-        intervalId = setInterval(GAME.step, 128 / Math.pow(2, GAME.currentSpeed()));
+        intervalId = setInterval(GAME.step, 32 / Math.pow(2, GAME.currentSpeed()));
       }
 
       isRunning = !isRunning;
