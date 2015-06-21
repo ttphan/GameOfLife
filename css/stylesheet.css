@@ -16,10 +16,23 @@ body {
   background-color: #9A9595;
 }
 
-#canvas {
-  width: 100%;
-  height: 100%;
+#canvas{
+	position: relative;
+}
+
+#mainCanvas {
   background-color: #e5e5e5;
+  z-index: 0;
+}
+
+#gridOverlay {
+	z-index: 1;
+}
+
+canvas {
+	position: absolute;
+	top: 0;
+	left: 50px;
 }
 
 .container {

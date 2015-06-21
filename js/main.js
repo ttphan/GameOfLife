@@ -6,7 +6,7 @@ $(function () {
     gridHeight = 50,
     gridSize = 10;
 
-  canvas = $("#canvas")[0];
+  canvas = $("#mainCanvas")[0];
   context = canvas.getContext('2d');
 
   init(gridWidth, gridHeight, gridSize);
@@ -54,7 +54,7 @@ function acorn() {
 
 function changeGridSize() {
   var size = $('#sizeSelection').val().split("x");
-
+  console.log(size)
   GAME.stop();
   GRID.init(parseInt(size[0]), parseInt(size[1]), parseInt(size[2]));
   GAME.init();
@@ -66,16 +66,44 @@ function selectSpeed() {
   GAME.setSpeed(speed);
 }
 
+function selectGridStyle() {
+  var style = parseInt($('#gridSelection').val());
+  GRID.setGridStyle(style)
+}
+
 var GRID = (function () {
   var width,
     height,
-    size;
+    size,
+    gridStyle = 2;
 
   return {
     init: function (gridWidth, gridHeight, gridSize) {
+      var gridCanvas = $("#gridOverlay")[0],
+        gridContext = gridCanvas.getContext('2d'),
+        color;
+
+      gridContext.clearRect(0, 0, canvas.width, canvas.height);
+
       width = gridWidth;
       height = gridHeight;
       size = gridSize;
+
+      if (gridStyle > 0) {
+        color = "#000000"
+        if (gridStyle == 1) {
+          color = "#e5e5e5"
+        }
+        for (var x = 0; x < width; x++) {
+          for (var y = 0; y < height; y++) {
+            gridContext.beginPath();
+            gridContext.strokeStyle = color;
+            gridContext.rect(x * size, y * size, size, size);
+            gridContext.stroke();
+            gridContext.closePath();
+          }
+        }
+      }
     },
 
     getWidth: function () {
@@ -88,6 +116,11 @@ var GRID = (function () {
 
     getSize: function () {
       return size;
+    },
+
+    setGridStyle: function (style) {
+      gridStyle = style;
+      GRID.init(width, height, size);
     },
 
     draw: function () {
@@ -112,7 +145,7 @@ var GRID = (function () {
 
             context.fill();
           }
-          context.stroke();
+          //context.stroke();
 
           context.closePath();
         }

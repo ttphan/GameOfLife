@@ -13,41 +13,47 @@
 	</head>
 
 	<body>
-		<h1 align="center"> Yet Another Conway's Game of Life Implementation </h1>
-		<div id="main_gui" class="container-fluid">
-			<div class="col-md-offset-1 col-md-10">
-				<canvas id="canvas" width="1000px" height="500px"></canvas>
-			</div>
-			<div class="col-md-offset-4 col-md-4">
-				<button class="btn btn-sm btn-primary" onclick="glider()">Glider</button>
+		<h1 style="margin-left: 120px"> Yet Another Conway's Game of Life Implementation </h1>
+		<div id="canvas">
+				<canvas id="mainCanvas" width="1000px" height="500px"></canvas>
+				<canvas id="gridOverlay" width="1000px" height="500px"></canvas>
+		</div>
+		<div style="margin-top: 550px; margin-left: 50px">
+			<button class="btn btn-sm btn-primary" onclick="glider()">Glider</button>
 
-				<button class="btn btn-sm btn-primary" onclick="acorn()">Acorn</button>
+			<button class="btn btn-sm btn-primary" onclick="acorn()">Acorn</button>
 
-				<button class="btn btn-sm btn-primary" onclick="GAME.stop(); GAME.step()">Step</button>
+			<button class="btn btn-sm btn-primary" onclick="GAME.stop(); GAME.step()">Step</button>
 
-				<button id="runButton" class="btn btn-sm btn-success" onclick="GAME.toggleRun()">Start</button>
+			<button id="runButton" class="btn btn-sm btn-success" onclick="GAME.toggleRun()">Start</button>
 
-				Size: 
-				<select id="sizeSelection" onchange="changeGridSize()">
-				  <option value="25x12x40">25 x 12</option>
-				  <option value="50x25x20">50 x 25</option>
-				  <option value="100x50x10" selected="selected">100 x 50</option>
-				  <option value="200x100x5">200 x 100</option>
-				</select>
+			Size: 
+			<select id="sizeSelection" onchange="changeGridSize()">
+			  <option value="25x12x40">25 x 12</option>
+			  <option value="50x25x20">50 x 25</option>
+			  <option value="100x50x10" selected="selected">100 x 50</option>
+			  <option value="200x100x5">200 x 100</option>
+			</select>
 
-				Speed:
-				<select id="speedSelection" onchange="selectSpeed()">
-				  <option value="0">Slow</option>
-				  <option value="1" selected="selected">Medium</option>
-				  <option value="2">Fast</option>
-				  <option value="3">Very Fast</option>
-				</select>
-			</div>
+			Speed:
+			<select id="speedSelection" onchange="selectSpeed()">
+			  <option value="0">Slow</option>
+			  <option value="1" selected="selected">Medium</option>
+			  <option value="2">Fast</option>
+			  <option value="3">Very Fast</option>
+			</select>
+
+			Grid:
+			<select id="gridSelection" onchange="selectGridStyle()">
+			  <option value="0">Off</option>
+			  <option value="1">Partial</option>
+			  <option value="2" selected="selected">On</option>
+			</select>
 		</div>
 
 		<footer class="footer">
       <div class="container">
-        <h4>Created by Tung Phan - https://github.com/ttphan/GameOfLife</h4>
+        <h4>Created by Tung Phan - <a href="https://github.com/ttphan/GameOfLife">Source hosted at GitHub<a></h4>
       </div>
     </footer>
 
