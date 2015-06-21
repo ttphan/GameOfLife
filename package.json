@@ -1,0 +1,26 @@
+{
+  "name": "GameOfLife",
+  "version": "0.0.0",
+  "description": "Yet Another GoL Implementation",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jasmine": "~0.8.2",
+    "grunt-template-jasmine-istanbul": "~0.3.3"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.11.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ttphan/GameOfLife.git"
+  },
+  "author": "Tung Phan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ttphan/GameOfLife/issues"
+  }
+}
