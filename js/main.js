@@ -11,8 +11,8 @@ $(function () {
   init(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, DEFAULT_CELL_SIZE);
 
   gridCanvas[0].addEventListener('click', function (event) {
-    var x = Math.floor((event.pageX - gridCanvas.offset().left) / GRID.getCellSize());
-    var y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getCellSize());
+    var x = Math.floor((event.pageX - gridCanvas.offset().left) / GRID.getCellSize()),
+      y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getCellSize());
 
     if (GAME.cellStatus(x, y) !== ALIVE) {
       GAME.cellStatus(x, y, ALIVE);
@@ -31,16 +31,16 @@ function init(width, height, size) {
 }
 
 function randomPop() {
-  var randomX = Math.floor(Math.random() * GRID.getWidth());
-  var randomY = Math.floor(Math.random() * GRID.getHeight());
+  var randomX = Math.floor(Math.random() * GRID.getWidth()),
+    randomY = Math.floor(Math.random() * GRID.getHeight());
 
   GAME.cellStatus(randomX, randomY, ALIVE);
   GRID.draw();
 }
 
 function glider() {
-  var center_x = Math.floor(GRID.getWidth() / 2);
-  var center_y = Math.floor(GRID.getHeight() / 2);
+  var center_x = Math.floor(GRID.getWidth() / 2),
+    center_y = Math.floor(GRID.getHeight() / 2);
 
   GAME.cellStatus(center_x, center_y - 1, ALIVE);
   GAME.cellStatus(center_x + 1, center_y, ALIVE);
@@ -51,16 +51,16 @@ function glider() {
 }
 
 function acorn() {
-  var center_x = Math.floor(GRID.getWidth() / 2);
-  var center_y = Math.floor(GRID.getHeight() / 2);
+  var center_x = Math.floor(GRID.getWidth() / 2),
+    center_y = Math.floor(GRID.getHeight() / 2);
 
-  GAME.cellStatus(center_x - 1, center_y - 1, ALIVE);
-  GAME.cellStatus(center_x + 1, center_y, ALIVE);
+  GAME.cellStatus(center_x - 2, center_y - 1, ALIVE);
+  GAME.cellStatus(center_x, center_y, ALIVE);
+  GAME.cellStatus(center_x - 3, center_y + 1, ALIVE);
   GAME.cellStatus(center_x - 2, center_y + 1, ALIVE);
-  GAME.cellStatus(center_x - 1, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x + 1, center_y + 1, ALIVE);
   GAME.cellStatus(center_x + 2, center_y + 1, ALIVE);
-  GAME.cellStatus(center_x + 3, center_y + 1, ALIVE);
-  GAME.cellStatus(center_x + ALIVE, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x - 1 + ALIVE, center_y + 1, ALIVE);
   GRID.draw();
 }
 
@@ -190,8 +190,8 @@ var GAME = (function () {
 
   return {
     init: function () {
-      var gridWidth = GRID.getWidth();
-      var gridHeight = GRID.getHeight();
+      var gridWidth = GRID.getWidth(),
+        gridHeight = GRID.getHeight();
 
       population = [];
       activeCells = [];
@@ -222,11 +222,10 @@ var GAME = (function () {
           for (var i = x - 1; i <= (x + 1); i++) {
             for (var j = y - 1; j <= (y + 1); j++) {
               // Wrap around
-              var a = (i + width) % width;
-              var b = (j + height) % height;
-
-              // Convert 2D coordinates to 1D
-              var index = b * width + a;
+              var a = (i + width) % width,
+                b = (j + height) % height,
+                // Convert 2D coordinates to 1D
+                index = b * width + a;
 
               // Only add if not already in active cell
               if (activeCells.indexOf(index) < 0) {

@@ -52,23 +52,23 @@ describe("Grid", function () {
   });
 
   it("should be able to change the population", function () {
-    expect(GAME.cellStatus(1, 2)).toBe(0);
-    expect(GAME.cellStatus(4, 3)).toBe(0);
+    expect(GAME.cellStatus(1, 2)).toBe(DEAD);
+    expect(GAME.cellStatus(4, 3)).toBe(DEAD);
 
-    GAME.cellStatus(1, 2, 4);
+    GAME.cellStatus(1, 2, ALIVE);
 
-    expect(GAME.cellStatus(1, 2)).toBe(4);
-    expect(GAME.cellStatus(4, 3)).toBe(0);
+    expect(GAME.cellStatus(1, 2)).toBe(ALIVE);
+    expect(GAME.cellStatus(4, 3)).toBe(DEAD);
 
-    GAME.cellStatus(4, 3, 4);
+    GAME.cellStatus(4, 3, ALIVE);
 
-    expect(GAME.cellStatus(1, 2)).toBe(4);
-    expect(GAME.cellStatus(4, 3)).toBe(4);
+    expect(GAME.cellStatus(1, 2)).toBe(ALIVE);
+    expect(GAME.cellStatus(4, 3)).toBe(ALIVE);
 
-    GAME.cellStatus(1, 2, 0);
+    GAME.cellStatus(1, 2, DEAD);
 
-    expect(GAME.cellStatus(1, 2)).toBe(0);
-    expect(GAME.cellStatus(4, 3)).toBe(4);
+    expect(GAME.cellStatus(1, 2)).toBe(DEAD);
+    expect(GAME.cellStatus(4, 3)).toBe(ALIVE);
   });
 
 });
