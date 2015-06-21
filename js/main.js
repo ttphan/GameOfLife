@@ -71,6 +71,7 @@ function selectGridStyle() {
   GRID.setGridStyle(style)
 }
 
+
 function selectTrailSize() {
   var trailSize = parseInt($('#trailSelection').val());
   GRID.setTrailSize(trailSize);
