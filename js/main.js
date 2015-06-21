@@ -132,6 +132,7 @@ var GRID = (function () {
 
     setTrailSize: function (size) {
       trailSize = size;
+      GRID.draw();
     },
 
     draw: function () {
