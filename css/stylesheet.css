@@ -19,7 +19,7 @@ body {
 #canvas {
   width: 100%;
   height: 100%;
-  background-color: #9A9595;
+  background-color: #e5e5e5;
 }
 
 .container {
@@ -28,6 +28,6 @@ body {
   padding: 0 15px;
 }
 
-.container p {
+.container h4 {
   margin: 20px 0;
 }
