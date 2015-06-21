@@ -30,12 +30,26 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+    jshint: {
+      files: 'js/*.js',
+      options: {
+        curly: true,
+        eqeqeq: true,
+        eqnull: true,
+        browser: true,
+        undef: true,
+        globals: {
+          "$": false
+        }
+      }
     }
   });
 
   // Register tasks.
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Default task.
-  grunt.registerTask('default', 'jasmine');
+  grunt.registerTask('default', ['jshint', 'jasmine']);
 };

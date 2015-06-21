@@ -1,7 +1,7 @@
 describe("Grid", function () {
   var gridWidth = 5,
     gridHeight = 5,
-    gridSize = 10;
+    cellSize = 10;
 
   beforeEach(function () {
     $("#mainCanvas").remove();
@@ -22,7 +22,7 @@ describe("Grid", function () {
       })
     );
 
-    GRID.init(gridWidth, gridHeight, gridSize);
+    GRID.init(gridWidth, gridHeight, cellSize);
     GAME.init();
   })
 
@@ -34,7 +34,7 @@ describe("Grid", function () {
   it("should be initialized correctly", function () {
     expect(GRID.getWidth()).toEqual(gridWidth);
     expect(GRID.getHeight()).toEqual(gridHeight);
-    expect(GRID.getSize()).toEqual(gridSize);
+    expect(GRID.getCellSize()).toEqual(cellSize);
   });
 
   it("should contain an empty population upon creation", function () {

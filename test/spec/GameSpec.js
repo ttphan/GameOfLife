@@ -12,7 +12,7 @@ describe("Game", function () {
     );
     $("body").prepend($("<canvas></canvas>")
       .prop({
-        id: "gridOverlay",
+      id: "gridOverlay",
         width: 200,
         height: 100
       })
