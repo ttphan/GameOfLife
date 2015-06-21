@@ -7,9 +7,24 @@ $(function () {
 });
 
 function init(width, height, size) {
+  var gridCanvas = $("#gridOverlay");
+
   GRID.init(width, height, size);
   GAME.init();
   GRID.draw();
+
+  gridCanvas[0].addEventListener('click', function (event) {
+    var x = Math.floor((event.pageX - gridCanvas.offset().left) / GRID.getSize());
+    var y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getSize());
+
+    if (GAME.cellStatus(x, y) != 4) {
+      GAME.cellStatus(x, y, 4);
+    } else {
+      GAME.cellStatus(x, y, 0);
+    }
+
+    GRID.draw();
+  })
 }
 
 function randomPop() {
@@ -48,7 +63,6 @@ function acorn() {
 
 function changeGridSize() {
   var size = $('#sizeSelection').val().split("x");
-  console.log(size)
   GAME.stop();
   GRID.init(parseInt(size[0]), parseInt(size[1]), parseInt(size[2]));
   GAME.init();
