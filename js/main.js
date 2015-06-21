@@ -71,11 +71,17 @@ function selectGridStyle() {
   GRID.setGridStyle(style)
 }
 
+function selectTrailSize() {
+  var trailSize = parseInt($('#trailSelection').val());
+  GRID.setTrailSize(trailSize);
+}
+
 var GRID = (function () {
   var width,
     height,
     size,
-    gridStyle = 2;
+    gridStyle = 2,
+    trailSize = 3;
 
   return {
     init: function (gridWidth, gridHeight, gridSize) {
@@ -123,6 +129,10 @@ var GRID = (function () {
       GRID.init(width, height, size);
     },
 
+    setTrailSize: function (size) {
+      trailSize = size;
+    },
+
     draw: function () {
       context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -143,9 +153,9 @@ var GRID = (function () {
               context.fillStyle = "#666666";
             }
 
-            context.fill();
+            if (status >= 4 - trailSize)
+              context.fill();
           }
-          //context.stroke();
 
           context.closePath();
         }
