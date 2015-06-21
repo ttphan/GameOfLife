@@ -1,9 +1,18 @@
 describe("Game", function () {
   beforeEach(function () {
-    $("#canvas").remove();
+    $("#mainCanvas").remove();
+    $("#gridOverlay").remove();
+
     $("body").prepend($("<canvas></canvas>")
       .prop({
-        id: "canvas",
+        id: "mainCanvas",
+        width: 200,
+        height: 100
+      })
+    );
+    $("body").prepend($("<canvas></canvas>")
+      .prop({
+        id: "gridOverlay",
         width: 200,
         height: 100
       })
@@ -14,7 +23,8 @@ describe("Game", function () {
   });
 
   afterEach(function () {
-    $("#canvas").remove();
+    $("#mainCanvas").remove();
+    $("#gridOverlay").remove();
   })
 
   it("should be able to return its current generation count", function () {
@@ -43,8 +53,8 @@ describe("Game", function () {
 
 
   it("should be able to keep a list of active cells", function () {
-    GAME.isAlive(1, 1, true);
-    GAME.isAlive(2, 1, true);
+    GAME.cellStatus(1, 1, 4);
+    GAME.cellStatus(2, 1, 4);
 
     var actualActiveCells = GAME.getActiveCells();
 
@@ -60,7 +70,7 @@ describe("Game", function () {
   });
 
   it("should be able to reset the list of active cells", function () {
-    GAME.isAlive(0, 0, true);
+    GAME.cellStatus(0, 0, 4);
     GAME.resetActiveCells();
     var activeCells = GAME.getActiveCells();
 
@@ -85,17 +95,17 @@ describe("Game", function () {
     			X X - - -
     	*/
 
-      GAME.isAlive(0, 0, true);
-      GAME.isAlive(0, 1, true);
-      GAME.isAlive(0, 2, true);
-      GAME.isAlive(0, 4, true);
+      GAME.cellStatus(0, 0, 4);
+      GAME.cellStatus(0, 1, 4);
+      GAME.cellStatus(0, 2, 4);
+      GAME.cellStatus(0, 4, 4);
 
-      GAME.isAlive(1, 0, true);
-      GAME.isAlive(1, 1, true);
+      GAME.cellStatus(1, 0, 4);
+      GAME.cellStatus(1, 1, 4);
 
-      GAME.isAlive(3, 3, true);
+      GAME.cellStatus(3, 3, 4);
 
-      GAME.isAlive(4, 0, true);
+      GAME.cellStatus(4, 0, 4);
     });
 
     it("should be able to return the amount of neighbours around a cell", function () {
@@ -108,54 +118,54 @@ describe("Game", function () {
 
     it("should let underpopulated cells die", function () {
       GAME.step();
-      expect(GAME.isAlive(3, 3)).toEqual(false);
+      expect(GAME.cellStatus(3, 3)).toEqual(3);
     });
 
     it("should let overpopulated cells die", function () {
       GAME.step();
-      expect(GAME.isAlive(0, 0)).toEqual(false);
-      expect(GAME.isAlive(0, 1)).toEqual(false);
+      expect(GAME.cellStatus(0, 0)).toEqual(3);
+      expect(GAME.cellStatus(0, 1)).toEqual(3);
 
-      expect(GAME.isAlive(1, 0)).toEqual(false);
-      expect(GAME.isAlive(1, 1)).toEqual(false);
+      expect(GAME.cellStatus(1, 0)).toEqual(3);
+      expect(GAME.cellStatus(1, 1)).toEqual(3);
     });
 
     it("should keep cells with 2 or 3 neighbours alive", function () {
       GAME.step();
-      expect(GAME.isAlive(0, 2)).toEqual(true);
-      expect(GAME.isAlive(0, 4)).toEqual(true);
+      expect(GAME.cellStatus(0, 2)).toEqual(4);
+      expect(GAME.cellStatus(0, 4)).toEqual(4);
 
-      expect(GAME.isAlive(4, 0)).toEqual(true);
+      expect(GAME.cellStatus(4, 0)).toEqual(4);
     });
 
     it("should revive dead cells with exactly 3 neighbours", function () {
       GAME.step();
-      expect(GAME.isAlive(1, 2)).toEqual(true);
-      expect(GAME.isAlive(1, 4)).toEqual(true);
+      expect(GAME.cellStatus(1, 2)).toEqual(4);
+      expect(GAME.cellStatus(1, 4)).toEqual(4);
 
-      expect(GAME.isAlive(4, 2)).toEqual(true);
-      expect(GAME.isAlive(4, 3)).toEqual(true);
+      expect(GAME.cellStatus(4, 2)).toEqual(4);
+      expect(GAME.cellStatus(4, 3)).toEqual(4);
     });
 
     it("should leave dead cells dead in all other cases", function () {
       GAME.step();
-      expect(GAME.isAlive(0, 3)).toEqual(false);
+      expect(GAME.cellStatus(0, 3)).toEqual(0);
 
-      expect(GAME.isAlive(1, 3)).toEqual(false);
+      expect(GAME.cellStatus(1, 3)).toEqual(0);
 
-      expect(GAME.isAlive(2, 0)).toEqual(false);
-      expect(GAME.isAlive(2, 1)).toEqual(false);
-      expect(GAME.isAlive(2, 2)).toEqual(false);
-      expect(GAME.isAlive(2, 3)).toEqual(false);
-      expect(GAME.isAlive(2, 4)).toEqual(false);
+      expect(GAME.cellStatus(2, 0)).toEqual(0);
+      expect(GAME.cellStatus(2, 1)).toEqual(0);
+      expect(GAME.cellStatus(2, 2)).toEqual(0);
+      expect(GAME.cellStatus(2, 3)).toEqual(0);
+      expect(GAME.cellStatus(2, 4)).toEqual(0);
 
-      expect(GAME.isAlive(3, 0)).toEqual(false);
-      expect(GAME.isAlive(3, 1)).toEqual(false);
-      expect(GAME.isAlive(3, 2)).toEqual(false);
-      expect(GAME.isAlive(3, 4)).toEqual(false);
+      expect(GAME.cellStatus(3, 0)).toEqual(0);
+      expect(GAME.cellStatus(3, 1)).toEqual(0);
+      expect(GAME.cellStatus(3, 2)).toEqual(0);
+      expect(GAME.cellStatus(3, 4)).toEqual(0);
 
-      expect(GAME.isAlive(4, 1)).toEqual(false);
-      expect(GAME.isAlive(4, 4)).toEqual(false);
+      expect(GAME.cellStatus(4, 1)).toEqual(0);
+      expect(GAME.cellStatus(4, 4)).toEqual(0);
     });
 
   });

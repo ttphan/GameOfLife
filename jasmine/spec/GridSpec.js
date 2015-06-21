@@ -4,10 +4,19 @@ describe("Grid", function () {
     gridSize = 10;
 
   beforeEach(function () {
-    $("#canvas").remove();
+    $("#mainCanvas").remove();
+    $("#gridOverlay").remove();
+
     $("body").prepend($("<canvas></canvas>")
       .prop({
-        id: "canvas",
+        id: "mainCanvas",
+        width: 200,
+        height: 100
+      })
+    );
+    $("body").prepend($("<canvas></canvas>")
+      .prop({
+        id: "gridOverlay",
         width: 200,
         height: 100
       })
@@ -18,7 +27,8 @@ describe("Grid", function () {
   })
 
   afterEach(function () {
-    $("#canvas").remove();
+    $("#mainCanvas").remove();
+    $("#gridOverlay").remove();
   })
 
   it("should be initialized correctly", function () {
@@ -32,7 +42,7 @@ describe("Grid", function () {
 
     for (var i = 0; i < GRID.getWidth(); i++) {
       for (var j = 0; j < GRID.getHeight(); j++) {
-        if (GAME.isAlive(i, j)) {
+        if (GAME.cellStatus(i, j) > 0) {
           isEmpty = false;
         }
       }
@@ -42,23 +52,23 @@ describe("Grid", function () {
   });
 
   it("should be able to change the population", function () {
-    expect(GAME.isAlive(1, 2)).toBe(false);
-    expect(GAME.isAlive(4, 3)).toBe(false);
+    expect(GAME.cellStatus(1, 2)).toBe(0);
+    expect(GAME.cellStatus(4, 3)).toBe(0);
 
-    GAME.isAlive(1, 2, true);
+    GAME.cellStatus(1, 2, 4);
 
-    expect(GAME.isAlive(1, 2)).toBe(true);
-    expect(GAME.isAlive(4, 3)).toBe(false);
+    expect(GAME.cellStatus(1, 2)).toBe(4);
+    expect(GAME.cellStatus(4, 3)).toBe(0);
 
-    GAME.isAlive(4, 3, true);
+    GAME.cellStatus(4, 3, 4);
 
-    expect(GAME.isAlive(1, 2)).toBe(true);
-    expect(GAME.isAlive(4, 3)).toBe(true);
+    expect(GAME.cellStatus(1, 2)).toBe(4);
+    expect(GAME.cellStatus(4, 3)).toBe(4);
 
-    GAME.isAlive(1, 2, false);
+    GAME.cellStatus(1, 2, 0);
 
-    expect(GAME.isAlive(1, 2)).toBe(false);
-    expect(GAME.isAlive(4, 3)).toBe(true);
+    expect(GAME.cellStatus(1, 2)).toBe(0);
+    expect(GAME.cellStatus(4, 3)).toBe(4);
   });
 
 });

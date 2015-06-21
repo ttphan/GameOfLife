@@ -1,13 +1,7 @@
-var canvas,
-  context;
-
 $(function () {
   var gridWidth = 100,
     gridHeight = 50,
     gridSize = 10;
-
-  canvas = $("#mainCanvas")[0];
-  context = canvas.getContext('2d');
 
   init(gridWidth, gridHeight, gridSize);
 });
@@ -22,7 +16,7 @@ function randomPop() {
   var randomX = Math.floor(Math.random() * GRID.getWidth());
   var randomY = Math.floor(Math.random() * GRID.getHeight());
 
-  GAME.isAlive(randomX, randomY, 4);
+  GAME.cellStatus(randomX, randomY, 4);
   GRID.draw();
 }
 
@@ -30,11 +24,11 @@ function glider() {
   var center_x = Math.floor(GRID.getWidth() / 2);
   var center_y = Math.floor(GRID.getHeight() / 2);
 
-  GAME.isAlive(center_x, center_y - 1, 4);
-  GAME.isAlive(center_x + 1, center_y, 4);
-  GAME.isAlive(center_x - 1, center_y + 1, 4);
-  GAME.isAlive(center_x, center_y + 1, 4);
-  GAME.isAlive(center_x + 1, center_y + 1, 4);
+  GAME.cellStatus(center_x, center_y - 1, 4);
+  GAME.cellStatus(center_x + 1, center_y, 4);
+  GAME.cellStatus(center_x - 1, center_y + 1, 4);
+  GAME.cellStatus(center_x, center_y + 1, 4);
+  GAME.cellStatus(center_x + 1, center_y + 1, 4);
   GRID.draw();
 }
 
@@ -42,13 +36,13 @@ function acorn() {
   var center_x = Math.floor(GRID.getWidth() / 2);
   var center_y = Math.floor(GRID.getHeight() / 2);
 
-  GAME.isAlive(center_x - 1, center_y - 1, 4);
-  GAME.isAlive(center_x + 1, center_y, 4);
-  GAME.isAlive(center_x - 2, center_y + 1, 4);
-  GAME.isAlive(center_x - 1, center_y + 1, 4);
-  GAME.isAlive(center_x + 2, center_y + 1, 4);
-  GAME.isAlive(center_x + 3, center_y + 1, 4);
-  GAME.isAlive(center_x + 4, center_y + 1, 4);
+  GAME.cellStatus(center_x - 1, center_y - 1, 4);
+  GAME.cellStatus(center_x + 1, center_y, 4);
+  GAME.cellStatus(center_x - 2, center_y + 1, 4);
+  GAME.cellStatus(center_x - 1, center_y + 1, 4);
+  GAME.cellStatus(center_x + 2, center_y + 1, 4);
+  GAME.cellStatus(center_x + 3, center_y + 1, 4);
+  GAME.cellStatus(center_x + 4, center_y + 1, 4);
   GRID.draw();
 }
 
@@ -90,7 +84,7 @@ var GRID = (function () {
         gridContext = gridCanvas.getContext('2d'),
         color;
 
-      gridContext.clearRect(0, 0, canvas.width, canvas.height);
+      gridContext.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
 
       width = gridWidth;
       height = gridHeight;
@@ -136,6 +130,9 @@ var GRID = (function () {
     },
 
     draw: function () {
+      var canvas = $("#mainCanvas")[0],
+        context = canvas.getContext('2d');
+
       context.clearRect(0, 0, canvas.width, canvas.height);
 
       for (var x = 0; x < width; x++) {
@@ -143,7 +140,7 @@ var GRID = (function () {
           context.beginPath();
 
           context.rect(x * size, y * size, size, size);
-          var status = GAME.isAlive(x, y);
+          var status = GAME.cellStatus(x, y);
           if (status > 0) {
             if (status == 4) {
               context.fillStyle = "red";
@@ -192,7 +189,7 @@ var GAME = (function () {
       return population;
     },
 
-    isAlive: function (x, y, status) {
+    cellStatus: function (x, y, status) {
       var width = GRID.getWidth(),
         height = GRID.getHeight();
 
@@ -275,7 +272,7 @@ var GAME = (function () {
         var amountOfNeighbours = GAME.livingNeighbours(x, y);
 
         // If alive
-        if (GAME.isAlive(x, y) == 3) {
+        if (GAME.cellStatus(x, y) == 3) {
           // Not under- or overpopulation -> keep alive
           if (amountOfNeighbours == 2 || amountOfNeighbours == 3) {
             livingCells.push(index);
@@ -295,7 +292,7 @@ var GAME = (function () {
         var x = index % width;
         var y = Math.floor(index / width);
 
-        GAME.isAlive(x, y, 4);
+        GAME.cellStatus(x, y, 4);
       }
 
       GRID.draw();
@@ -313,7 +310,7 @@ var GAME = (function () {
           // Check if it is itself
           if (!(i == x && j == y)) {
             // check if it is alive
-            if (GAME.isAlive((i + width) % width, (j + height) % height) >= 3) {
+            if (GAME.cellStatus((i + width) % width, (j + height) % height) >= 3) {
               amountOfNeighbours++;
             }
           }
