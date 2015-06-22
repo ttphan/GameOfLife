@@ -1,79 +1,119 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Yet Another Conway's Game of Life Implementation</title>
+  <head>
+    <meta charset="UTF-8">
+    <title>Yet Another Conway's Game of Life Implementation</title>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/stylesheet.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		<script src="js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
 
-	</head>
+  </head>
 
-	<body>
-		<h1 id="header" style="margin-left: 120px"> Yet Another Conway's Game of Life Implementation </h1>
-		<div id="canvas">
-				<canvas id="mainCanvas" width="1000px" height="500px"></canvas>
-				<canvas id="gridOverlay" width="1000px" height="500px"></canvas>
-		</div>
-
-		<div style="margin-top: 550px; margin-left: 50px">
-			<h4 id="generationLabel"> Generation: 0</h4>
-			<h4 id="cellsAliveLabel"> Cells Alive: 0 (0.00%)</h4>
-			<button class="btn btn-sm btn-primary" onclick="glider()">Glider</button>
-
-			<button class="btn btn-sm btn-primary" onclick="acorn()">Acorn</button>
-
-			<button class="btn btn-sm btn-primary" onclick="glider_gun()">Glider Gun</button>
-
-			<button class="btn btn-sm btn-primary" onclick="GAME.stop(); GAME.step()">Step</button>
-
-			<button id="runButton" class="btn btn-sm btn-success" onclick="GAME.toggleRun()">Start</button>
-
-			Size: 
-			<select id="sizeSelection" onchange="changeGridSize()">
-			  <option value="25x12x40">25 x 12</option>
-			  <option value="50x25x20">50 x 25</option>
-			  <option value="100x50x10" selected="selected">100 x 50</option>
-			  <option value="200x100x5">200 x 100</option>
-			</select>
-
-			Speed:
-			<select id="speedSelection" onchange="selectSpeed()">
-			  <option value="0">Slow</option>
-			  <option value="1" selected="selected">Medium</option>
-			  <option value="2">Fast</option>
-			  <option value="3">Very Fast</option>
-			</select>
-
-			Grid:
-			<select id="gridSelection" onchange="selectGridStyle()">
-			  <option value="0">Off</option>
-			  <option value="1">Partial</option>
-			  <option value="2" selected="selected">On</option>
-			</select>
-
-			Trail size:
-			<select id="trailSelection" onchange="selectTrailSize()">
-			  <option value="0">Off</option>
-			  <option value="1">1</option>
-			  <option value="2">2</option>
-			  <option value="3" selected="selected">3</option>
-			</select>
-
-			<button id="runButton" class="btn btn-sm btn-warning" onclick="restart()">Clear</button>
-		</div>
-
-		<footer class="footer">
+  <body>
+  <div id="wrapper">
+      <!-- Sidebar -->
+      <div id="sidebar-wrapper">
+          <ul class="sidebar-nav">
+              <li class="sidebar-brand">
+                  <h3>Controls</h3>
+              </li>
+              <li>
+                <h4> Add Predefined Forms </h4>
+              </li>
+              <li>
+                <a onclick="glider()">Glider</a>
+              </li>
+              <li>
+                  <a onclick="acorn()">Acorn</a>
+              </li>
+              <li>
+                  <a onclick="gliderGun()">Glider Gun</a>
+              </li>
+              <li>
+                <h4> Grid Control </h4>
+              </li>
+              <li>
+              <span>Size:</span> 
+                <select id="sizeSelection" onchange="changeGridSize()">
+                  <option value="25x12x40">25 x 12</option>
+                  <option value="50x25x20">50 x 25</option>
+                  <option value="100x50x10" selected="selected">100 x 50</option>
+                  <option value="200x100x5">200 x 100</option>
+                </select>
+              </li>
+              <li>
+                <span>Grid:</span>
+                <select id="gridSelection" onchange="selectGridStyle()">
+                  <option value="0">Off</option>
+                  <option value="1">Partial</option>
+                  <option value="2" selected="selected">On</option>
+                </select>
+              </li>
+              <li>
+                <span>Trail size:</span>
+                <select id="trailSelection" onchange="selectTrailSize()">
+                  <option value="0">Off</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3" selected="selected">3</option>
+                </select>
+              </li>
+              <li>
+                <h4> Time Control </h4>
+              <li>
+                <span>Speed:</span>
+                <select id="speedSelection" onchange="selectSpeed()">
+                  <option value="0">Slow</option>
+                  <option value="1" selected="selected">Medium</option>
+                  <option value="2">Fast</option>
+                  <option value="3">Very Fast</option>
+                </select>
+              </li>
+              </li>
+              <li>
+                  <a onclick="GAME.stop(); GAME.step()">Step</a>
+              </li>
+              <li>
+                  <a id="runButton" onclick="GAME.toggleRun()">Start</a>
+              </li>
+              <li>
+                <h4> Misc. Controls </h4>
+              </li>
+              <li>
+                  <a onclick="randomize()">Randomize</a>
+              </li>
+              <li>
+                  <a onclick="restart()">Reset</a>
+              </li>
+          </ul>
+    <footer class="footer">
       <div class="container">
-        <h4>Created by Tung Phan - <a href="https://github.com/ttphan/GameOfLife">Source hosted at GitHub<a></h4>
+        <h4>Created by Tung Phan <br>
+        <a href="https://github.com/ttphan/GameOfLife" target="_blank">Source hosted at GitHub</a></h4>
       </div>
     </footer>
+      </div>
 
-		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-		<script src="assets/js/ie10-viewport-bug-workaround.js"></script>
-	</body>
+    <h1 id="header"> Yet Another Conway's Game of Life Implementation </h1>
+    <div id="canvas">
+        <canvas id="mainCanvas" width="1000px" height="500px"></canvas>
+        <canvas id="gridOverlay" width="1000px" height="500px"></canvas>
+    </div>
 
+    <div style="margin-top: 520px;" >
+      <span id="generationLabel"> Generation: 0</span>
+      <span id="cellsAliveLabel"> Cells Alive: 0 (0.00%)</span>
+    </div>
+    <button class="btn btn-default btn-glow" id="menu-toggle">
+      <span id="menu-toggle-icon" class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+    </button>
+  </div>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>
