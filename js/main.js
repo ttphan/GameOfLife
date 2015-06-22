@@ -1,16 +1,36 @@
 var ALIVE = 4,
   DEAD = 0,
-  SPEED = 32;
+  SPEED = 32,
+  DEFAULT_GRID_WIDTH = 100,
+  DEFAULT_GRID_HEIGHT = 50,
+  DEFAULT_CELL_SIZE = 10;
 
 $(function () {
-  var DEFAULT_GRID_WIDTH = 100,
-    DEFAULT_GRID_HEIGHT = 50,
-    DEFAULT_CELL_SIZE = 10;
-
   init(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, DEFAULT_CELL_SIZE);
 
   addMouseListeners();
 });
+
+function restart(gridWidth, gridHeight, cellSize) {
+  var width,
+    height,
+    size;
+
+  if (arguments.length === 3) {
+    width = gridWidth;
+    height = gridHeight;
+    size = cellSize;
+  } else {
+    width = GRID.getWidth();
+    height = GRID.getHeight();
+    size = GRID.getCellSize();
+  }
+
+  GAME.stop();
+  $("#generationLabel").text("Generation: 0");
+  $("#cellsAliveLabel").text("Cells alive: 0 (0.00%)");
+  init(width, height, size);
+}
 
 function addMouseListeners() {
   var mouseDown = false,
@@ -23,14 +43,15 @@ function addMouseListeners() {
     y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getCellSize());
 
     mouseDown = true;
+    if (x < GRID.getWidth() && y < GRID.getHeight()) {
+      if (GAME.cellStatus(x, y) !== ALIVE) {
+        GAME.cellStatus(x, y, ALIVE);
+      } else {
+        GAME.cellStatus(x, y, DEAD);
+      }
 
-    if (GAME.cellStatus(x, y) !== ALIVE) {
-      GAME.cellStatus(x, y, ALIVE);
-    } else {
-      GAME.cellStatus(x, y, DEAD);
+      GRID.draw();
     }
-
-    GRID.draw();
   });
 
   $(document).mouseup(function () {
@@ -45,14 +66,15 @@ function addMouseListeners() {
       if (new_x !== x || new_y !== y) {
         x = new_x;
         y = new_y;
+        if (x < GRID.getWidth() && y < GRID.getHeight()) {
+          if (GAME.cellStatus(x, y) !== ALIVE) {
+            GAME.cellStatus(x, y, ALIVE);
+          } else {
+            GAME.cellStatus(x, y, DEAD);
+          }
 
-        if (GAME.cellStatus(x, y) !== ALIVE) {
-          GAME.cellStatus(x, y, ALIVE);
-        } else {
-          GAME.cellStatus(x, y, DEAD);
+          GRID.draw();
         }
-
-        GRID.draw();
       }
     }
   });
@@ -98,10 +120,55 @@ function acorn() {
   GRID.draw();
 }
 
+function glider_gun() {
+  var center_x = Math.floor(GRID.getWidth() / 2),
+    center_y = Math.floor(GRID.getHeight() / 2);
+
+  GAME.cellStatus(center_x + 6, center_y - 4, ALIVE);
+  GAME.cellStatus(center_x + 4, center_y - 3, ALIVE);
+  GAME.cellStatus(center_x + 6, center_y - 3, ALIVE);
+  GAME.cellStatus(center_x - 5, center_y - 2, ALIVE);
+  GAME.cellStatus(center_x + 3, center_y - 2, ALIVE);
+  GAME.cellStatus(center_x + 5, center_y - 2, ALIVE);
+  GAME.cellStatus(center_x + 17, center_y - 2, ALIVE);
+  GAME.cellStatus(center_x + 18, center_y - 2, ALIVE);
+  GAME.cellStatus(center_x - 6, center_y - 1, ALIVE);
+  GAME.cellStatus(center_x - 5, center_y - 1, ALIVE);
+  GAME.cellStatus(center_x + 2, center_y - 1, ALIVE);
+  GAME.cellStatus(center_x + 5, center_y - 1, ALIVE);
+  GAME.cellStatus(center_x + 17, center_y - 1, ALIVE);
+  GAME.cellStatus(center_x + 18, center_y - 1, ALIVE);
+  GAME.cellStatus(center_x - 17, center_y, ALIVE);
+  GAME.cellStatus(center_x - 16, center_y, ALIVE);
+  GAME.cellStatus(center_x - 7, center_y, ALIVE);
+  GAME.cellStatus(center_x - 6, center_y, ALIVE);
+  GAME.cellStatus(center_x - 1, center_y, ALIVE);
+  GAME.cellStatus(center_x, center_y, ALIVE);
+  GAME.cellStatus(center_x + 3, center_y, ALIVE);
+  GAME.cellStatus(center_x + 5, center_y, ALIVE);
+  GAME.cellStatus(center_x - 17, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x - 16, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x - 8, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x - 7, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x - 6, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x - 1, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x + 4, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x + 6, center_y + 1, ALIVE);
+  GAME.cellStatus(center_x - 7, center_y + 2, ALIVE);
+  GAME.cellStatus(center_x - 6, center_y + 2, ALIVE);
+  GAME.cellStatus(center_x - 1, center_y + 2, ALIVE);
+  GAME.cellStatus(center_x, center_y + 2, ALIVE);
+  GAME.cellStatus(center_x + 6, center_y + 2, ALIVE);
+  GAME.cellStatus(center_x - 6, center_y + 3, ALIVE);
+  GAME.cellStatus(center_x - 5, center_y + 3, ALIVE);
+  GAME.cellStatus(center_x - 5, center_y + 4, ALIVE);
+  GRID.draw();
+}
+
 function changeGridSize() {
   var size = $('#sizeSelection').val().split("x");
-  GAME.stop();
-  init(parseInt(size[0]), parseInt(size[1]), parseInt(size[2]));
+  restart(parseInt(size[0]), parseInt(size[1]), parseInt(size[2]));
 }
 
 function selectSpeed() {
@@ -216,22 +283,22 @@ var GRID = (function () {
 })();
 
 var GAME = (function () {
-  var generation = 0,
+  var generation,
     speed = 1,
     isRunning = false,
     intervalId,
     population,
-    activeCells;
+    activeCells,
+    cellsAlive;
 
   return {
     init: function () {
-      var gridWidth = GRID.getWidth(),
-        gridHeight = GRID.getHeight();
-
       population = [];
       activeCells = [];
+      generation = 0,
+      cellsAlive = 0;
 
-      for (var i = 0; i < gridWidth * gridHeight; i++) {
+      for (var i = 0; i < GRID.getWidth() * GRID.getHeight(); i++) {
         population[i] = DEAD;
       }
     },
@@ -242,7 +309,8 @@ var GAME = (function () {
 
     cellStatus: function (x, y, status) {
       var width = GRID.getWidth(),
-        height = GRID.getHeight();
+        height = GRID.getHeight(),
+        percentage;
 
       // Get
       if (arguments.length < 3) {
@@ -253,6 +321,7 @@ var GAME = (function () {
         population[y * width + x] = status;
 
         if (status === ALIVE) {
+          cellsAlive++;
           // Add changed cell with its neighbours to active cell list
           for (var i = x - 1; i <= (x + 1); i++) {
             for (var j = y - 1; j <= (y + 1); j++) {
@@ -268,7 +337,11 @@ var GAME = (function () {
               }
             }
           }
+        } else if (status === DEAD) {
+          cellsAlive--;
         }
+        percentage = ((cellsAlive / (width * height)) * 100).toFixed(2);
+        $("#cellsAliveLabel").text("Cells alive: " + cellsAlive + " (" + percentage + "%)");
       }
     },
 
@@ -304,7 +377,7 @@ var GAME = (function () {
     step: function () {
       var width = GRID.getWidth(),
         height = GRID.getHeight(),
-        livingCells = [],
+        cellsToLive = [],
         activeCells = GAME.getActiveCells(),
         index,
         x,
@@ -312,6 +385,9 @@ var GAME = (function () {
 
       for (var i = 0; i < width * height; i++) {
         if (population[i] !== DEAD) {
+          if (population[i] === ALIVE) {
+            cellsAlive--;
+          }
           population[i] = population[i] - 1;
         }
       }
@@ -328,20 +404,20 @@ var GAME = (function () {
         if (GAME.cellStatus(x, y) === 3) {
           // Not under- or overpopulation -> keep alive
           if (amountOfNeighbours === 2 || amountOfNeighbours === 3) {
-            livingCells.push(index);
+            cellsToLive.push(index);
           }
         }
         // If not alive, if it has exactly 3 living neighbours -> alive
         else if (amountOfNeighbours === 3) {
-          livingCells.push(index);
+          cellsToLive.push(index);
         }
       }
 
       // Clear grid and redraw the living cells.
       GAME.resetActiveCells();
 
-      for (var k = 0; k < livingCells.length; k++) {
-        index = livingCells[k];
+      for (var k = 0; k < cellsToLive.length; k++) {
+        index = cellsToLive[k];
         x = index % width;
         y = Math.floor(index / width);
 
@@ -351,6 +427,7 @@ var GAME = (function () {
       GRID.draw();
 
       generation++;
+      $("#generationLabel").text("Generation: " + generation);
     },
 
     livingNeighbours: function (x, y) {
