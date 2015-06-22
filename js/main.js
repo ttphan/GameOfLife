@@ -9,6 +9,13 @@ $(function () {
   init(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, DEFAULT_CELL_SIZE);
 
   addMouseListeners();
+
+  $("#menu-toggle").click(function (e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+    $("#menu-toggle").toggleClass("toggled");
+    $("#menu-toggle-icon").toggleClass("glyphicon glyphicon-menu-right glyphicon glyphicon-menu-left")
+  });
 });
 
 function restart(gridWidth, gridHeight, cellSize) {
@@ -317,10 +324,14 @@ var GAME = (function () {
       }
       // Set
       else {
+        // Only raise cell count if cell wasn't alive already
+        if (status === ALIVE && population[y * width + x] !== ALIVE) {
+          cellsAlive++;
+        }
+
         population[y * width + x] = status;
 
         if (status === ALIVE) {
-          cellsAlive++;
           // Add changed cell with its neighbours to active cell list
           for (var i = x - 1; i <= (x + 1); i++) {
             for (var j = y - 1; j <= (y + 1); j++) {
@@ -454,13 +465,11 @@ var GAME = (function () {
 
       if (isRunning) {
         button.text("Start")
-          .removeClass("btn-danger")
-          .addClass("btn-success");
+          .removeClass("running");
         clearInterval(intervalId);
       } else {
         button.text("Stop")
-          .removeClass("btn-success")
-          .addClass("btn-danger");
+          .addClass("running");
         intervalId = setInterval(GAME.step, SPEED / Math.pow(2, GAME.currentSpeed()));
       }
 
@@ -469,9 +478,7 @@ var GAME = (function () {
 
     stop: function () {
       $("#runButton").text("Start")
-        .removeClass("btn-danger")
-        .addClass("btn-success");
-
+        .removeClass("running");
       clearInterval(intervalId);
       isRunning = false;
     }
