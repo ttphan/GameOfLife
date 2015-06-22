@@ -18,10 +18,15 @@
 				<canvas id="mainCanvas" width="1000px" height="500px"></canvas>
 				<canvas id="gridOverlay" width="1000px" height="500px"></canvas>
 		</div>
+
 		<div style="margin-top: 550px; margin-left: 50px">
+			<h4 id="generationLabel"> Generation: 0</h4>
+			<h4 id="cellsAliveLabel"> Cells Alive: 0 (0.00%)</h4>
 			<button class="btn btn-sm btn-primary" onclick="glider()">Glider</button>
 
 			<button class="btn btn-sm btn-primary" onclick="acorn()">Acorn</button>
+
+			<button class="btn btn-sm btn-primary" onclick="glider_gun()">Glider Gun</button>
 
 			<button class="btn btn-sm btn-primary" onclick="GAME.stop(); GAME.step()">Step</button>
 
@@ -57,6 +62,8 @@
 			  <option value="2">2</option>
 			  <option value="3" selected="selected">3</option>
 			</select>
+
+			<button id="runButton" class="btn btn-sm btn-warning" onclick="restart()">Clear</button>
 		</div>
 
 		<footer class="footer">
