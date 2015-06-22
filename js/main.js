@@ -93,14 +93,6 @@ function init(width, height, size) {
   GRID.draw();
 }
 
-function randomPop() {
-  var randomX = Math.floor(Math.random() * GRID.getWidth()),
-    randomY = Math.floor(Math.random() * GRID.getHeight());
-
-  GAME.cellStatus(randomX, randomY, ALIVE);
-  GRID.draw();
-}
-
 function glider() {
   var center_x = Math.floor(GRID.getWidth() / 2),
     center_y = Math.floor(GRID.getHeight() / 2);
@@ -127,7 +119,7 @@ function acorn() {
   GRID.draw();
 }
 
-function glider_gun() {
+function gliderGun() {
   var center_x = Math.floor(GRID.getWidth() / 2),
     center_y = Math.floor(GRID.getHeight() / 2);
 
@@ -170,6 +162,24 @@ function glider_gun() {
   GAME.cellStatus(center_x - 6, center_y + 3, ALIVE);
   GAME.cellStatus(center_x - 5, center_y + 3, ALIVE);
   GAME.cellStatus(center_x - 5, center_y + 4, ALIVE);
+  GRID.draw();
+}
+
+function randomize() {
+  var width = GRID.getWidth(),
+    height = GRID.getHeight(),
+    threshold = 0.75;
+
+  restart();
+
+  for (var x = 0; x < width; x++) {
+    for (var y = 0; y < height; y++) {
+      if (Math.random() > threshold) {
+        GAME.cellStatus(x, y, ALIVE);
+      }
+    }
+  }
+
   GRID.draw();
 }
 
