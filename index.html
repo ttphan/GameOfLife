@@ -25,13 +25,13 @@
                 <h4> Add Predefined Patterns </h4>
               </li>
               <li>
-                <a onclick="glider()">Glider</a>
-              </li>
-              <li>
-                  <a onclick="acorn()">Acorn</a>
-              </li>
-              <li>
-                  <a onclick="gliderGun()">Glider Gun</a>
+              <span> Pattern: </span>
+              <select id="patternSelection">
+                <option value="single" selected="selected">Single</option>
+                <option value="glider">Glider</option>
+                <option value="gliderGun">Glider Gun</option>
+                <option value="acorn">Acorn</option>
+              </select>
               </li>
               <li>
                 <h4> Grid Control </h4>
@@ -64,6 +64,12 @@
                 </select>
               </li>
               <li>
+                  <a onclick="randomize()">Randomize</a>
+              </li>
+              <li>
+                  <a onclick="restart()">Reset</a>
+              </li>
+              <li>
                 <h4> Time Control </h4>
               <li>
                 <span>Speed:</span>
@@ -80,15 +86,6 @@
               </li>
               <li>
                   <a id="runButton">Start</a>
-              </li>
-              <li>
-                <h4> Misc. Controls </h4>
-              </li>
-              <li>
-                  <a onclick="randomize()">Randomize</a>
-              </li>
-              <li>
-                  <a onclick="restart()">Reset</a>
               </li>
           </ul>
     <footer class="footer">
