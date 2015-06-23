@@ -22,7 +22,7 @@
                   <h3>Controls</h3>
               </li>
               <li>
-                <h4> Add Predefined Forms </h4>
+                <h4> Add Predefined Patterns </h4>
               </li>
               <li>
                 <a onclick="glider()">Glider</a>
@@ -38,7 +38,7 @@
               </li>
               <li>
               <span>Size:</span> 
-                <select id="sizeSelection" onchange="changeGridSize()">
+                <select id="sizeSelection">
                   <option value="25x12x40">25 x 12</option>
                   <option value="50x25x20">50 x 25</option>
                   <option value="100x50x10" selected="selected">100 x 50</option>
@@ -47,15 +47,16 @@
               </li>
               <li>
                 <span>Grid:</span>
-                <select id="gridSelection" onchange="selectGridStyle()">
+                <select id="gridSelection">
                   <option value="0">Off</option>
                   <option value="1">Partial</option>
-                  <option value="2" selected="selected">On</option>
+                  <option value="2">Light</option>
+                  <option value="3" selected="selected">On</option>
                 </select>
               </li>
               <li>
                 <span>Trail size:</span>
-                <select id="trailSelection" onchange="selectTrailSize()">
+                <select id="trailSelection">
                   <option value="0">Off</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -75,10 +76,10 @@
               </li>
               </li>
               <li>
-                  <a onclick="GAME.stop(); GAME.step()">Step</a>
+                  <a id="stepButton">Step</a>
               </li>
               <li>
-                  <a id="runButton" onclick="GAME.toggleRun()">Start</a>
+                  <a id="runButton">Start</a>
               </li>
               <li>
                 <h4> Misc. Controls </h4>
