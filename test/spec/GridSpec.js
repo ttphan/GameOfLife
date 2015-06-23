@@ -42,7 +42,7 @@ describe("Grid", function () {
 
     for (var i = 0; i < GRID.getWidth(); i++) {
       for (var j = 0; j < GRID.getHeight(); j++) {
-        if (GAME.cellStatus(i, j) > 0) {
+        if (GAME.getCellStatus(i, j) > 0) {
           isEmpty = false;
         }
       }
@@ -52,23 +52,23 @@ describe("Grid", function () {
   });
 
   it("should be able to change the population", function () {
-    expect(GAME.cellStatus(1, 2)).toBe(DEAD);
-    expect(GAME.cellStatus(4, 3)).toBe(DEAD);
+    expect(GAME.getCellStatus(1, 2)).toBe(DEAD);
+    expect(GAME.getCellStatus(4, 3)).toBe(DEAD);
 
-    GAME.cellStatus(1, 2, ALIVE);
+    GAME.setCellStatus(1, 2, ALIVE);
 
-    expect(GAME.cellStatus(1, 2)).toBe(ALIVE);
-    expect(GAME.cellStatus(4, 3)).toBe(DEAD);
+    expect(GAME.getCellStatus(1, 2)).toBe(ALIVE);
+    expect(GAME.getCellStatus(4, 3)).toBe(DEAD);
 
-    GAME.cellStatus(4, 3, ALIVE);
+    GAME.setCellStatus(4, 3, ALIVE);
 
-    expect(GAME.cellStatus(1, 2)).toBe(ALIVE);
-    expect(GAME.cellStatus(4, 3)).toBe(ALIVE);
+    expect(GAME.getCellStatus(1, 2)).toBe(ALIVE);
+    expect(GAME.getCellStatus(4, 3)).toBe(ALIVE);
 
-    GAME.cellStatus(1, 2, DEAD);
+    GAME.setCellStatus(1, 2, DEAD);
 
-    expect(GAME.cellStatus(1, 2)).toBe(DEAD);
-    expect(GAME.cellStatus(4, 3)).toBe(ALIVE);
+    expect(GAME.getCellStatus(1, 2)).toBe(DEAD);
+    expect(GAME.getCellStatus(4, 3)).toBe(ALIVE);
   });
 
 });
