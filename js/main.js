@@ -3,19 +3,14 @@ var ALIVE = 4,
   SPEED = 32,
   DEFAULT_GRID_WIDTH = 100,
   DEFAULT_GRID_HEIGHT = 50,
-  DEFAULT_CELL_SIZE = 10;
+  DEFAULT_CELL_SIZE = 10,
+  canvas,
+  context;
 
 $(function () {
-  init(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, DEFAULT_CELL_SIZE);
+  init();
 
-  addMouseListeners();
-
-  $("#menu-toggle").click(function (e) {
-    e.preventDefault();
-    $("#wrapper").toggleClass("toggled");
-    $("#menu-toggle").toggleClass("toggled");
-    $("#menu-toggle-icon").toggleClass("glyphicon glyphicon-menu-right glyphicon glyphicon-menu-left")
-  });
+  addListeners();
 });
 
 function restart(gridWidth, gridHeight, cellSize) {
@@ -39,7 +34,7 @@ function restart(gridWidth, gridHeight, cellSize) {
   init(width, height, size);
 }
 
-function addMouseListeners() {
+function addListeners() {
   var mouseDown = false,
     gridCanvas = $("#gridOverlay"),
     x,
@@ -85,10 +80,24 @@ function addMouseListeners() {
       }
     }
   });
+
+  $("#menu-toggle").click(function (e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+    $("#menu-toggle").toggleClass("toggled");
+    $("#menu-toggle-icon").toggleClass("glyphicon glyphicon-menu-right glyphicon glyphicon-menu-left")
+  });
 }
 
 function init(width, height, size) {
-  GRID.init(width, height, size);
+  canvas = $("#mainCanvas")[0];
+  context = canvas.getContext('2d');
+
+  if (arguments.length < 3) {
+    GRID.init(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, DEFAULT_CELL_SIZE);
+  } else {
+    GRID.init(width, height, size);
+  }
   GAME.init();
   GRID.draw();
 }
@@ -263,9 +272,6 @@ var GRID = (function () {
     },
 
     draw: function () {
-      var canvas = $("#mainCanvas")[0],
-        context = canvas.getContext('2d');
-
       context.clearRect(0, 0, canvas.width, canvas.height);
 
       for (var x = 0; x < width; x++) {
@@ -276,9 +282,6 @@ var GRID = (function () {
     },
 
     drawCell: function (x, y) {
-      var canvas = $("#mainCanvas")[0],
-        context = canvas.getContext('2d');
-
       var status = GAME.cellStatus(x, y);
       if (status > DEAD) {
         context.beginPath();
