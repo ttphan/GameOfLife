@@ -237,29 +237,6 @@ function randomize() {
   GRID.draw();
 }
 
-<<<<<<< HEAD
-function changeGridSize() {
-  var size = $('#sizeSelection').val().split("x");
-  restart(parseInt(size[0]), parseInt(size[1]), parseInt(size[2]));
-}
-
-function selectSpeed() {
-  var speed = parseInt($('#speedSelection').val());
-  GAME.setSpeed(speed);
-}
-
-function selectGridStyle() {
-  var style = parseInt($('#gridSelection').val());
-  GRID.setGridStyle(style);
-}
-
-
-function selectTrailSize() {
-  var trailSize = parseInt($('#trailSelection').val());
-  GRID.setTrailSize(trailSize);
-}
-
-=======
 /**
  * @GRID
  *
@@ -271,7 +248,6 @@ function selectTrailSize() {
  * gridStyle[0..3]: Grid style, 0: no grid, 1: partial, 2: light, 3: full
  * trailSize[0..3]: Amount of trailing, 3 means cells died up to 3 generations ago will be shown, 0 means no trail.
  */
->>>>>>> master
 var GRID = (function () {
   var width,
     height,
