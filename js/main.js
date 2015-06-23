@@ -57,7 +57,7 @@ function addMouseListeners() {
         GAME.cellStatus(x, y, DEAD);
       }
 
-      GRID.draw();
+      GRID.drawCell(x, y);
     }
   });
 
@@ -80,7 +80,7 @@ function addMouseListeners() {
             GAME.cellStatus(x, y, DEAD);
           }
 
-          GRID.draw();
+          GRID.drawCell(x, y);
         }
       }
     }
@@ -269,30 +269,35 @@ var GRID = (function () {
 
       for (var x = 0; x < width; x++) {
         for (var y = 0; y < height; y++) {
-          var status = GAME.cellStatus(x, y);
-          if (status > DEAD) {
-            context.beginPath();
-            context.rect(x * cellSize, y * cellSize, cellSize, cellSize);
-            if (status === ALIVE) {
-              context.fillStyle = "red";
-            } else if (status === 3) {
-              context.fillStyle = "orange";
-            } else if (status === 2) {
-              context.fillStyle = "yellow";
-            } else {
-              context.fillStyle = "#666666";
-            }
-
-            if (status >= ALIVE - trailSize) {
-              context.fill();
-            }
-            context.closePath();
-          }
+          GRID.drawCell(x, y);
         }
+      }
+    },
+
+    drawCell: function (x, y) {
+      var canvas = $("#mainCanvas")[0],
+        context = canvas.getContext('2d');
+
+      var status = GAME.cellStatus(x, y);
+      if (status > DEAD) {
+        context.beginPath();
+        context.rect(x * cellSize, y * cellSize, cellSize, cellSize);
+        if (status === ALIVE) {
+          context.fillStyle = "red";
+        } else if (status === 3) {
+          context.fillStyle = "orange";
+        } else if (status === 2) {
+          context.fillStyle = "yellow";
+        } else {
+          context.fillStyle = "#666666";
+        }
+        if (status >= ALIVE - trailSize) {
+          context.fill();
+        }
+        context.closePath();
       }
     }
   };
-
 })();
 
 var GAME = (function () {
