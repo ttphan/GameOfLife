@@ -271,11 +271,9 @@ var GRID = (function () {
       for (var x = 0; x < width; x++) {
         for (var y = 0; y < height; y++) {
           var status = GAME.cellStatus(x, y);
-
-          context.beginPath();
-          context.rect(x * cellSize, y * cellSize, cellSize, cellSize);
-
           if (status > DEAD) {
+            context.beginPath();
+            context.rect(x * cellSize, y * cellSize, cellSize, cellSize);
             if (status === ALIVE) {
               context.fillStyle = "red";
             } else if (status === 3) {
@@ -289,9 +287,8 @@ var GRID = (function () {
             if (status >= ALIVE - trailSize) {
               context.fill();
             }
+            context.closePath();
           }
-
-          context.closePath();
         }
       }
     }
@@ -463,6 +460,10 @@ var GAME = (function () {
             // check if it is alive
             if (GAME.cellStatus((i + width) % width, (j + height) % height) >= 3) {
               amountOfNeighbours++;
+              // More neighbour checking is useless
+              if (amountOfNeighbours > 3) {
+                return amountOfNeighbours;
+              }
             }
           }
         }
