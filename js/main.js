@@ -16,7 +16,32 @@ var ALIVE = 4,
     2: "yellow",
     3: "orange",
     4: "red"
-  };
+  },
+  PATTERNS = {
+    single: function (x, y) {
+      if (GAME.getCellStatus(x, y) !== ALIVE) {
+        GAME.setCellStatus(x, y, ALIVE);
+      } else {
+        GAME.setCellStatus(x, y, DEAD);
+      }
+
+      GRID.drawCell(x, y, true);
+    },
+    glider: function (x, y) {
+      buildPattern([[0, -1], [1, 0], [-1, 1], [0, 1], [1, 1]], x, y);
+    },
+    acorn: function (x, y) {
+      buildPattern([[-2, -1], [0, 0], [-3, 1], [-2, 1], [1, 1], [2, 1], [3, 1]], x, y);
+    },
+    gliderGun: function (x, y) {
+      buildPattern([[6, -4], [4, -3], [6, -3], [-5, -2], [3, -2], [5, -2], [17, -2],
+    [18, -2], [-6, -1], [-5, -1], [2, -1], [5, -1], [17, -1], [18, -1], [-17, 0],
+    [-16, 0], [-7, 0], [-6, 0], [-1, 0], [0, 0], [3, 0], [5, 0], [-17, 1], [-16, 1],
+    [-8, 1], [-7, 1], [-6, 1], [-1, 1], [0, 1], [4, 1], [6, 1], [-7, 2], [-6, 2],
+    [-1, 2], [0, 2], [6, 2], [-6, 3], [-5, 3], [-5, 4]], x, y);
+    }
+  },
+  selectedPattern = "single";
 
 $(function () {
   init();
@@ -70,13 +95,7 @@ function addListeners() {
 
     // Ensure the only fire if the cursor is not-of-bounds, useful for the 25x12 board
     if (x < GRID.getWidth() && y < GRID.getHeight()) {
-      if (GAME.getCellStatus(x, y) !== ALIVE) {
-        GAME.setCellStatus(x, y, ALIVE);
-      } else {
-        GAME.setCellStatus(x, y, DEAD);
-      }
-
-      GRID.drawCell(x, y, true);
+      PATTERNS[selectedPattern](x, y);
     }
   });
 
@@ -85,7 +104,7 @@ function addListeners() {
   });
 
   gridCanvas.mousemove(function (event) {
-    if (mouseDown) {
+    if (mouseDown && selectedPattern === "single") {
       var new_x = Math.floor((event.pageX - gridCanvas.offset().left) / GRID.getCellSize()),
         new_y = Math.floor((event.pageY - gridCanvas.offset().top) / GRID.getCellSize());
 
@@ -111,6 +130,11 @@ function addListeners() {
     $("#wrapper").toggleClass("toggled");
     $("#menu-toggle").toggleClass("toggled");
     $("#menu-toggle-icon").toggleClass("glyphicon glyphicon-menu-right glyphicon glyphicon-menu-left");
+  });
+
+  $("#patternSelection").change(function () {
+    selectedPattern = $(this).val();
+    console.log($(this).val());
   });
 
   $("#sizeSelection").change(function () {
@@ -162,36 +186,6 @@ function init(width, height, size) {
   GRID.draw();
 }
 
-/**
- * @glider
- *
- * Constructs glider in the center of the grid
- */
-function glider() {
-  buildPattern([[0, -1], [1, 0], [-1, 1], [0, 1], [1, 1]]);
-}
-
-/**
- * @acorn
- *
- * Constructs acorn in the center of the grid
- */
-function acorn() {
-  buildPattern([[-2, -1], [0, 0], [-3, 1], [-2, 1], [1, 1], [2, 1], [3, 1]]);
-}
-
-/**
- * @gliderGun
- *
- * Constructs acorn in the center of the grid
- */
-function gliderGun() {
-  buildPattern([[6, -4], [4, -3], [6, -3], [-5, -2], [3, -2], [5, -2], [17, -2],
-    [18, -2], [-6, -1], [-5, -1], [2, -1], [5, -1], [17, -1], [18, -1], [-17, 0],
-    [-16, 0], [-7, 0], [-6, 0], [-1, 0], [0, 0], [3, 0], [5, 0], [-17, 1], [-16, 1],
-    [-8, 1], [-7, 1], [-6, 1], [-1, 1], [0, 1], [4, 1], [6, 1], [-7, 2], [-6, 2],
-    [-1, 2], [0, 2], [6, 2], [-6, 3], [-5, 3], [-5, 4]]);
-}
 
 /**
  * @buildPattern
@@ -199,14 +193,18 @@ function gliderGun() {
  * Build a pattern based on the positions given, positions are relative to
  * the center of the grid.
  */
-function buildPattern(positions) {
+function buildPattern(positions, x, y) {
   var position,
-    center_x = Math.floor(GRID.getWidth() / 2),
-    center_y = Math.floor(GRID.getHeight() / 2);
+    wrapped_x,
+    wrapped_y,
+    width = GRID.getWidth(),
+    height = GRID.getHeight();
 
   while (positions.length) {
     position = positions.pop();
-    GAME.setCellStatus(center_x + position[0], center_y + position[1], ALIVE);
+    wrapped_x = (x + position[0] + width) % width;
+    wrapped_y = (y + position[1] + height) % height;
+    GAME.setCellStatus(wrapped_x, wrapped_y, ALIVE);
   }
 
   GRID.draw();
